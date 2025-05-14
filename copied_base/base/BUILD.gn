@@ -37,7 +37,6 @@ import("//build/config/sanitizers/sanitizers.gni")
 import("//build/config/sysroot.gni")
 import("//build/config/ui.gni")
 import("//build/nocompile.gni")
-import("//build/timestamp.gni")
 import("//build_overrides/build.gni")
 import("//testing/libfuzzer/fuzzer_test.gni")
 import("//testing/test.gni")
@@ -96,12 +95,14 @@ assert(!is_win || is_clang,
 
 if (is_android || is_robolectric) {
   import("//build/config/android/rules.gni")
-  import("//third_party/jni_zero/jni_zero.gni")
 }
+import("//third_party/jni_zero/jni_zero.gni")
 
 if (is_fuchsia) {
   import("//third_party/fuchsia-sdk/sdk/build/fidl_library.gni")
 }
+
+_build_date_header = "$target_gen_dir/generated_build_date.h"
 
 if (is_cobalt) {
   use_perfetto_client_library = true
@@ -943,6 +944,7 @@ component("base") {
     "version.h",
     "vlog.cc",
     "vlog.h",
+    _build_date_header,
   ]
 
 
@@ -4181,15 +4183,28 @@ if (is_win && toolchain_has_rust) {
   }
 }
 
-action("build_date") {
-  script = "write_build_date_header.py"
+if (current_toolchain == jni_zero_toolchain) {
+  # Without guarding this, we would run write_build_date_header.py once per
+  # toolchain, while getting the same output. This is expensive, so expose
+  # the per-toolchain one via :build_date, which is a cheap copy.
+  import("//build/timestamp.gni")
+  _build_date_header_internal =
+      "$target_gen_dir/generated_build_date_internal.h"
 
-  outputs = [ "$target_gen_dir/generated_build_date.h" ]
+  action("build_date_internal") {
+    script = "write_build_date_header.py"
+    outputs = [ _build_date_header_internal ]
+    args = [
+      rebase_path(_build_date_header_internal, root_build_dir),
+      build_timestamp,
+    ]
+  }
+}
 
-  args = [
-    rebase_path("$target_gen_dir/generated_build_date.h", root_build_dir),
-    build_timestamp,
-  ]
+copy("build_date") {
+  sources = [ "$root_build_dir/gen/copied_base/base/generated_build_date_internal.h" ]
+  outputs = [ _build_date_header ]
+  deps = [ ":build_date_internal($jni_zero_toolchain)" ]
 }
 
 if (is_android || is_robolectric) {
