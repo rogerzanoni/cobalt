@@ -34,5 +34,5 @@ target_cpu = "arm"
 is_clang = false
 using_old_compiler = true
 rdk_build_with_yocto = false
-rdk_starboard_root= "//starboard/contrib/rdk/src" 
+rdk_starboard_root = "//starboard/contrib/rdk/src"
 rdk_enable_securityagent = false
