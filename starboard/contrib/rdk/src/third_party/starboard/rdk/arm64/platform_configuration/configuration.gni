@@ -28,8 +28,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import("//third_party/starboard/rdk/shared/platform_configuration/configuration.gni")
+import(
+    "//third_party/starboard/rdk/shared/platform_configuration/configuration.gni")
 
 arm_version = 8
 sabi_path = "//starboard/sabi/arm64/sabi-v$sb_api_version.json"
-

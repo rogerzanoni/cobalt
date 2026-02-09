@@ -32,17 +32,16 @@
 
 #include <cstring>
 
-
-#include "starboard/common/string.h"
 #include "starboard/common/log.h"
+#include "starboard/common/string.h"
 #include "starboard/extension/configuration.h"
 #include "starboard/extension/crash_handler.h"
-#include "starboard/extension/loader_app_metrics.h"
 #include "starboard/extension/graphics.h"
-#include "third_party/starboard/rdk/shared/graphics.h"
+#include "starboard/extension/loader_app_metrics.h"
 #include "starboard/extension/platform_service.h"
 #include "third_party/starboard/rdk/shared/accessibility_extension.h"
 #include "third_party/starboard/rdk/shared/configuration.h"
+#include "third_party/starboard/rdk/shared/graphics.h"
 #include "third_party/starboard/rdk/shared/platform_service.h"
 #if SB_IS(EVERGREEN_COMPATIBLE)
 #include "starboard/elf_loader/evergreen_config.h"
@@ -70,11 +69,9 @@ const void* SbSystemGetExtension(const char* name) {
 #endif
   if (strcmp(name, kCobaltExtensionConfigurationName) == 0) {
     return third_party::starboard::rdk::shared::GetConfigurationApi();
-  }
-  else if (strcmp(name, kCobaltExtensionGraphicsName) == 0) {
+  } else if (strcmp(name, kCobaltExtensionGraphicsName) == 0) {
     return starboard::rdk::shared::GetGraphicsApi();
-  }
-  else if (strcmp(name, kCobaltExtensionPlatformServiceName) == 0) {
+  } else if (strcmp(name, kCobaltExtensionPlatformServiceName) == 0) {
     return third_party::starboard::rdk::shared::GetPlatformServiceApi();
   }
   if (strcmp(name, kStarboardExtensionAccessibilityName) == 0) {
@@ -82,4 +79,3 @@ const void* SbSystemGetExtension(const char* name) {
   }
   return NULL;
 }
-
