@@ -17,6 +17,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 namespace starboard {
 namespace elf_loader {
@@ -31,6 +32,10 @@ class ExportedSymbols {
   ExportedSymbols();
   // Returns the address of the symbol |name|. If it's not found, returns NULL.
   const void* Lookup(const char* name);
+
+  // Checks that all symbols in |names| are available. Logs all missing symbols
+  // and returns false if any are missing.
+  bool VerifyAll(const std::vector<std::string>& names);
 
  private:
   std::map<std::string, const void*> map_;

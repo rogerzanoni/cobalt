@@ -620,5 +620,18 @@ const void* ExportedSymbols::Lookup(const char* name) {
   return address;
 }
 
+bool ExportedSymbols::VerifyAll(const std::vector<std::string>& names) {
+  bool all_found = true;
+  for (const auto& name : names) {
+    auto it = map_.find(name);
+    if (it != map_.end() && it->second != nullptr) {
+      continue;
+    }
+    SB_LOG(ERROR) << "Missing exported symbol: '" << name << "'.";
+    all_found = false;
+  }
+  return all_found;
+}
+
 }  // namespace elf_loader
 }  // namespace starboard

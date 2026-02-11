@@ -66,6 +66,10 @@ class Relocations {
                      Addr reloc,
                      Addr* sym_addr);
 
+  // Pre-verifies that all symbols needed by relocations are available.
+  // Returns false if any are missing, after logging all of them.
+  bool VerifySymbols();
+
   // Checks if there are any text relocations.
   bool HasTextRelocations();
 
