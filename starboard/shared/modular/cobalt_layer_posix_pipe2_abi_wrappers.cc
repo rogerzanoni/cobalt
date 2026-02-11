@@ -1,4 +1,4 @@
-// Copyright 2024 The Cobalt Authors. All Rights Reserved.
+// Copyright 2025 The Cobalt Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,13 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <dirent.h>
+#include <fcntl.h>
+
+static_assert(O_NONBLOCK == 04000,
+              "The Starboard layer wrapper expects this value from musl");
 
 extern "C" {
 
-int* __abi_wrap___errno_location();
+int __abi_wrap_pipe2(int fildes[2], int flag);
 
-int* __errno_location() {
-  return __abi_wrap___errno_location();
+int pipe2(int fildes[2], int flag) {
+  return __abi_wrap_pipe2(fildes, flag);
 }
 }

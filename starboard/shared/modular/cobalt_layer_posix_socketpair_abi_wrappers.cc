@@ -1,4 +1,4 @@
-// Copyright 2024 The Cobalt Authors. All Rights Reserved.
+// Copyright 2025 The Cobalt Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <dirent.h>
-
 extern "C" {
 
-int* __abi_wrap___errno_location();
+int __abi_wrap_socketpair(int domain,
+                          int type,
+                          int protocol,
+                          int socket_vector[2]);
 
-int* __errno_location() {
-  return __abi_wrap___errno_location();
+int socketpair(int domain, int type, int protocol, int socket_vector[2]) {
+  return __abi_wrap_socketpair(domain, type, protocol, socket_vector);
 }
 }

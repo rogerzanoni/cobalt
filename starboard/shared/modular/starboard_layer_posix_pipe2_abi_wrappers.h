@@ -1,4 +1,4 @@
-// Copyright 2024 The Cobalt Authors. All Rights Reserved.
+// Copyright 2025 The Cobalt Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,13 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <dirent.h>
+#ifndef STARBOARD_SHARED_MODULAR_STARBOARD_LAYER_POSIX_PIPE2_ABI_WRAPPERS_H_
+#define STARBOARD_SHARED_MODULAR_STARBOARD_LAYER_POSIX_PIPE2_ABI_WRAPPERS_H_
 
+#include "starboard/export.h"
+
+#ifdef __cplusplus
 extern "C" {
+#endif
 
-int* __abi_wrap___errno_location();
+// These values are from the musl headers.
+#define MUSL_O_NONBLOCK 04000
+#define MUSL_O_CLOEXEC 02000000
 
-int* __errno_location() {
-  return __abi_wrap___errno_location();
-}
-}
+SB_EXPORT int __abi_wrap_pipe2(int fildes[2], int flag);
+
+#ifdef __cplusplus
+}  // extern "C"
+#endif
+
+#endif  // STARBOARD_SHARED_MODULAR_STARBOARD_LAYER_POSIX_PIPE2_ABI_WRAPPERS_H_

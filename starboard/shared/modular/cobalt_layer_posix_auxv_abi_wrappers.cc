@@ -1,4 +1,4 @@
-// Copyright 2024 The Cobalt Authors. All Rights Reserved.
+// Copyright 2025 The Cobalt Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,13 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <dirent.h>
+#include "starboard/shared/modular/starboard_layer_posix_auxv_abi_wrappers.h"
 
-extern "C" {
-
-int* __abi_wrap___errno_location();
-
-int* __errno_location() {
-  return __abi_wrap___errno_location();
-}
+unsigned long getauxval(unsigned long type) {
+  return __abi_wrap_getauxval(type);
 }
