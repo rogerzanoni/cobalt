@@ -411,19 +411,18 @@ template("evergreen_loader") {
   copy("copy_loader_app_lib${original_target_name}") {
     install_content = true
 
-    # TODO(b/348401006): remove this special case when we support compression
-    # for all targets.
-    if (original_target_name == "cobalt") {
-      library_extension = "lz4"
-    } else {
-      library_extension = "so"
-    }
-
+    library_extension = "so"
     abi_suffix = ""
     if (target_cpu == "arm" && arm_float_abi == "softfp") {
       abi_suffix = "-${arm_float_abi}"
     }
-    sources = [ "$root_out_dir/../evergreen-$target_cpu${abi_suffix}_$build_type/install/lib/lib${original_target_name}.${library_extension}" ]
+
+    libcobalt = getenv("COBALT_LIBCOBALT")
+    if (libcobalt != "") {
+      sources = [ libcobalt ]
+    } else {
+      sources = [ "$root_out_dir/../evergreen-$target_cpu${abi_suffix}_$build_type/install/lib/lib${original_target_name}.${library_extension}" ]
+    }
     outputs = [ "$sb_static_contents_output_data_dir/app/cobalt/lib/lib${original_target_name}.${library_extension}" ]
   }
   install_target(original_target_name + "_evergreen_loader_install") {
