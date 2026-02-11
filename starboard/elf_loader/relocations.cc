@@ -14,6 +14,10 @@
 
 #include "starboard/elf_loader/relocations.h"
 
+#include <set>
+#include <string>
+#include <vector>
+
 #include "starboard/common/log.h"
 #include "starboard/elf_loader/log.h"
 
@@ -141,7 +145,57 @@ bool Relocations::InitRelocations() {
   return true;
 }
 
+bool Relocations::VerifySymbols() {
+  std::set<std::string> needed;
+  bool all_valid = true;
+
+  auto collect = [&](const rel_t* rel, size_t count) {
+    if (!rel)
+      return;
+    for (size_t i = 0; i < count; i++, rel++) {
+      const Word rel_type = ELF_R_TYPE(rel->r_info);
+      const Word rel_symbol = ELF_R_SYM(rel->r_info);
+      if (rel_type == 0)
+        continue;
+      RelocationType r = GetRelocationType(rel_type);
+      if (r == RELOCATION_TYPE_UNKNOWN || r == RELOCATION_TYPE_COPY) {
+        SB_LOG(ERROR) << "Invalid relocation type: " << r;
+        all_valid = false;
+        continue;
+      }
+      if (rel_symbol == 0)
+        continue;
+      const char* sym_name = dynamic_section_->LookupNameById(rel_symbol);
+      if (dynamic_section_->LookupByName(sym_name))
+        continue;
+      if (dynamic_section_->IsWeakById(rel_symbol)) {
+        if (r != RELOCATION_TYPE_ABSOLUTE && r != RELOCATION_TYPE_RELATIVE &&
+            r != RELOCATION_TYPE_PC_RELATIVE) {
+          SB_LOG(ERROR) << "Invalid weak relocation type (" << r
+                        << ") for unknown symbol '" << sym_name << "'";
+          all_valid = false;
+        }
+        continue;
+      }
+      needed.insert(sym_name);
+    }
+  };
+
+  collect(reinterpret_cast<rel_t*>(relocations_),
+          relocations_size_ / sizeof(rel_t));
+  collect(reinterpret_cast<rel_t*>(plt_relocations_),
+          plt_relocations_size_ / sizeof(rel_t));
+
+  std::vector<std::string> names(needed.begin(), needed.end());
+  return exported_symbols_->VerifyAll(names) && all_valid;
+}
+
 bool Relocations::ApplyAllRelocations() {
+  if (!VerifySymbols()) {
+    SB_LOG(ERROR) << "Symbol verification failed: missing exported symbols.";
+    return false;
+  }
+
   SB_DLOG(INFO) << "Applying regular relocations";
   if (!ApplyRelocations(reinterpret_cast<rel_t*>(relocations_),
                         relocations_size_ / sizeof(rel_t))) {
