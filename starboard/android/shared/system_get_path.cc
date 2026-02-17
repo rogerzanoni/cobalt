@@ -91,6 +91,16 @@ bool SbSystemGetPath(SbSystemPathId path_id, char* out_path, int path_size) {
       SB_NOTIMPLEMENTED();
       return false;
 #endif
+    case kSbSystemPathFilesDirectory: {
+      if (starboard::strlcpy(path, g_app_files_dir, kPathSize) >= kPathSize) {
+        return false;
+      }
+      if (starboard::strlcat(path, "/files", kPathSize) >= kPathSize) {
+        return false;
+      }
+      mkdir(path, 0700);
+      break;
+    }
 
     case kSbSystemPathStorageDirectory: {
       if (starboard::strlcpy(path, g_app_files_dir, kPathSize) >= kPathSize) {
