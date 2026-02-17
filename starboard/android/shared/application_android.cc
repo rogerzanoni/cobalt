@@ -374,7 +374,9 @@ void ApplicationAndroid::ProcessAndroidCommand() {
                      settings.is_high_contrast_text_enabled;
 
       if (enabled != last_is_accessibility_high_contrast_text_enabled_) {
-        Inject(new Event(kSbEventTypeAccessibilitySettingsChanged, NULL, NULL));
+        bool* enabled_data = new bool(enabled);
+        Inject(new Event(kSbEventTypeAccessibilityTextToSpeechSettingsChanged,
+                         enabled_data, &Application::DeleteDestructor<bool>));
       }
       last_is_accessibility_high_contrast_text_enabled_ = enabled;
       break;
