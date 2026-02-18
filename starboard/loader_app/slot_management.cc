@@ -37,6 +37,7 @@
 #include "starboard/loader_app/installation_manager.h"
 #include "starboard/memory.h"
 #include "starboard/string.h"
+#include "starboard/system.h"
 #include "third_party/crashpad/crashpad/wrapper/annotations.h"
 #include "third_party/crashpad/crashpad/wrapper/wrapper.h"
 #include "third_party/jsoncpp/source/include/json/reader.h"
@@ -341,7 +342,7 @@ void* LoadSlotManagedLibrary(const std::string& app_key,
       }
     }
 
-    SB_DLOG(INFO) << "installation_path=" << installation_path.data();
+    SB_LOG(INFO) << "installation_path=" << installation_path.data();
 
     if (current_installation != 0) {
       // Cleanup all expired files from all apps.
@@ -380,15 +381,18 @@ void* LoadSlotManagedLibrary(const std::string& app_key,
 
     // installation_n/lib/libcobalt.so
     std::vector<char> compressed_lib_path(kSbFileMaxPath);
-    snprintf(compressed_lib_path.data(), kSbFileMaxPath, "%s%s%s%s%s",
-             installation_path.data(), kSbFileSepString, kCobaltLibraryPath,
-             kSbFileSepString, kCompressedCobaltLibraryName);
     std::vector<char> uncompressed_lib_path(kSbFileMaxPath);
-    snprintf(uncompressed_lib_path.data(), kSbFileMaxPath, "%s%s%s%s%s",
-             installation_path.data(), kSbFileSepString, kCobaltLibraryPath,
-             kSbFileSepString, kCobaltLibraryName);
-
     std::string lib_path;
+    if (!SbSystemGetPath(
+           kSbSystemPathExecutableFile, lib_path.data(), kSbFileMaxPath)) {
+      SB_LOG(ERROR) << "Couldn't retrieve lib_path.";
+    }
+
+    snprintf(compressed_lib_path.data(), kSbFileMaxPath, "%s%s%s",
+             lib_path.data(), kSbFileSepString, kCompressedCobaltLibraryName);
+    snprintf(uncompressed_lib_path.data(), kSbFileMaxPath, "%s%s%s",
+             lib_path.data(), kSbFileSepString, kCobaltLibraryName);
+
     bool use_compression;
     struct stat info;
     if (stat(compressed_lib_path.data(), &info) == 0) {
@@ -480,16 +484,16 @@ void* LoadSlotManagedLibrary(const std::string& app_key,
       if (third_party::crashpad::wrapper::InsertCrashpadAnnotation(
               third_party::crashpad::wrapper::kCrashpadUserAgentStringKey,
               buffer.data())) {
-        SB_DLOG(INFO) << "Added user agent string to Crashpad.";
+        SB_LOG(INFO) << "Added user agent string to Crashpad.";
       } else {
-        SB_DLOG(INFO) << "Failed to add user agent string to Crashpad.";
+        SB_LOG(INFO) << "Failed to add user agent string to Crashpad.";
       }
     }
 
-    SB_DLOG(INFO) << "Successfully loaded Cobalt!\n";
+    SB_LOG(INFO) << "Successfully loaded Cobalt!\n";
     void* p = library_loader->Resolve("SbEventHandle");
     if (p != NULL) {
-      SB_DLOG(INFO) << "Symbol Lookup succeeded address: " << p;
+      SB_LOG(INFO) << "Symbol Lookup succeeded address: " << p;
       return p;
     } else {
       SB_LOG(ERROR) << "Symbol Lookup failed\n";
