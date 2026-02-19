@@ -171,6 +171,8 @@ config("platform_configuration") {
       "-Wl,--wrap=open",
       "-Wl,--wrap=openat",
       "-Wl,--wrap=stat",
+      "-Wl,--wrap=fstatat",
+      "-Wl,--wrap=access",
       "-Wl,--wrap=opendir",
       "-Wl,--wrap=closedir",
       "-Wl,--wrap=readdir_r",
