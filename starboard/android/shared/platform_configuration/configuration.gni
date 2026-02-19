@@ -47,7 +47,7 @@ cobalt_licenses_platform = "android"
 
 cobalt_platform_dependencies = []
 
-cobalt_font_package = "android_system"
+cobalt_font_package = "standard"
 
 separate_install_targets_for_bundling = true
 
