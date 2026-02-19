@@ -34,6 +34,7 @@ using starboard::android::shared::OpenAndroidAsset;
 extern "C" {
 int __real_close(int fildes);
 int __real_open(const char* path, int oflag, ...);
+int __real_openat(int dirfd, const char* path, int oflag, ...);
 
 int __wrap_close(int fildes) {
   AssetManager* asset_manager = AssetManager::GetInstance();
@@ -43,19 +44,29 @@ int __wrap_close(int fildes) {
   return __real_close(fildes);
 }
 
-int __wrap_open(const char* path, int oflag, ...) {
+int __wrap_openat(int dirfd, const char* path, int oflag, ...) {
   if (!IsAndroidAssetPath(path)) {
     va_list args;
     va_start(args, oflag);
-    int fd;
     if (oflag & O_CREAT) {
       mode_t mode = va_arg(args, int);
-      return __real_open(path, oflag, mode);
+      return __real_openat(dirfd, path, oflag, mode);
     } else {
-      return __real_open(path, oflag);
+      return __real_openat(dirfd, path, oflag);
     }
   }
   return AssetManager::GetInstance()->Open(path, oflag);
+}
+
+int __wrap_open(const char* path, int oflag, ...) {
+  if (oflag & O_CREAT) {
+    va_list args;
+    va_start(args, oflag);
+    mode_t mode = va_arg(args, int);
+    va_end(args);
+    return __wrap_openat(AT_FDCWD, path, oflag, mode);
+  }
+  return __wrap_openat(AT_FDCWD, path, oflag);
 }
 
 }  // extern "C"
