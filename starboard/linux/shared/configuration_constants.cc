@@ -135,9 +135,7 @@ const uint32_t kSbUserMaxSignedIn = 1;
 // The maximum size the cache directory is allowed to use in bytes.
 const uint32_t kSbMaxSystemPathCacheDirectorySize = 24 << 20;  // 24MiB
 
-#if SB_API_VERSION >= 18
 SB_EXPORT extern const bool kSbCanMapExecutableMemory = true;
 
 // Platform can support partial audio frames
 SB_EXPORT extern const bool kHasPartialAudioFramesSupport = true;
-#endif
