@@ -39,11 +39,11 @@ void* ThreadFunc(void* params) {
   ThreadParams* thread_params = static_cast<ThreadParams*>(params);
   PlatformThread::Delegate* delegate = thread_params->delegate;
 
-#if SB_API_VERSION >= 16
+#if SB_API_VERSION >= 18
   if (kSbHasThreadPrioritySupport) {
     SbThreadSetPriority(thread_params->thread_priority);
   }
-#endif  // SB_API_VERSION >= 16
+#endif  // SB_API_VERSION >= 18
   pthread_setname_np(pthread_self(), thread_params->thread_name.c_str());
 
   absl::optional<ScopedDisallowSingleton> disallow_singleton;
@@ -66,7 +66,7 @@ void* ThreadFunc(void* params) {
   return NULL;
 }
 
-#if SB_API_VERSION >= 16
+#if SB_API_VERSION >= 18
 bool CreateThread(size_t stack_size,
                   SbThreadPriority priority,
                   bool joinable,
@@ -129,7 +129,7 @@ bool CreateThread(size_t stack_size,
 
   return false;
 }
-#endif  // SB_API_VERSION >= 16
+#endif  // SB_API_VERSION >= 18
 
 inline SbThreadPriority toSbPriority(ThreadType priority) {
   switch (priority) {
@@ -159,21 +159,21 @@ PlatformThreadId PlatformThread::CurrentId() {
 
 // static
 PlatformThreadRef PlatformThread::CurrentRef() {
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   return PlatformThreadRef(SbThreadGetCurrent());
 #else
   return PlatformThreadRef(pthread_self());
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 
 }
 
 // static
 PlatformThreadHandle PlatformThread::CurrentHandle() {
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   return PlatformThreadHandle(SbThreadGetCurrent());
 #else
   return PlatformThreadHandle(pthread_self());
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 }
 
 // static
@@ -225,19 +225,19 @@ void PlatformThread::Join(PlatformThreadHandle thread_handle) {
   // the thread referred to by |thread_handle| may still be running long-lived /
   // blocking tasks.
   internal::AssertBlockingAllowed();
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   SbThreadJoin(thread_handle.platform_handle(), NULL);
 #else
   pthread_join(thread_handle.platform_handle(), NULL);
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 }
 
 void PlatformThread::Detach(PlatformThreadHandle thread_handle) {
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   SbThreadDetach(thread_handle.platform_handle());
 #else
   pthread_detach(thread_handle.platform_handle());
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 }
 
 void internal::SetCurrentThreadTypeImpl(ThreadType /* thread_type */, MessagePumpType /*pump_type_hint*/) {

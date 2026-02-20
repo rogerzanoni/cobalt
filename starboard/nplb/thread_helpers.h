@@ -15,7 +15,7 @@
 #ifndef STARBOARD_NPLB_THREAD_HELPERS_H_
 #define STARBOARD_NPLB_THREAD_HELPERS_H_
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 #include "starboard/common/mutex.h"
 #include "starboard/common/semaphore.h"
@@ -197,5 +197,5 @@ class AbstractTestThread {
 }  // namespace nplb
 }  // namespace starboard
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 #endif  // STARBOARD_NPLB_THREAD_HELPERS_H_

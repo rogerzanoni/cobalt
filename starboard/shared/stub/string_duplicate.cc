@@ -14,10 +14,10 @@
 
 #include "starboard/common/string.h"
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 char* SbStringDuplicate(const char* source) {
   return NULL;
 }
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18

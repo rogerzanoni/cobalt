@@ -54,7 +54,7 @@ int SbMemoryMapFlagsToMmapProtect(int sb_flags) {
   return mmap_protect;
 }
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 int32_t s_tracked_page_count = 0;
 
 int32_t GetPageCount(size_t byte_count) {
@@ -80,11 +80,11 @@ bool SbPageUnmapUntracked(void* ptr, size_t size_bytes) {
   return munmap(ptr, size_bytes) == 0;
 }
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 
 }  // namespace
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 void* SbPageMap(size_t size_bytes, int flags, const char* unused_name) {
   void* ret = SbPageMapUntracked(size_bytes, flags, NULL);
   if (ret != SB_MEMORY_MAP_FAILED) {
@@ -108,7 +108,7 @@ size_t SbPageGetMappedBytes() {
   return static_cast<size_t>(SbAtomicNoBarrier_Load(&s_tracked_page_count) *
                              kSbMemoryPageSize);
 }
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 
 void* SbPageMapFile(void* addr,
                     const char* path,

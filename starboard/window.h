@@ -137,7 +137,7 @@ SB_EXPORT bool SbWindowGetSize(SbWindow window, SbWindowSize* size);
 // |window|: The SbWindow to retrieve the platform handle for.
 SB_EXPORT void* SbWindowGetPlatformHandle(SbWindow window);
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 // System-triggered OnScreenKeyboard events have ticket value
 // kSbEventOnScreenKeyboardInvalidTicket.
@@ -223,7 +223,7 @@ SB_EXPORT void SbWindowUpdateOnScreenKeyboardSuggestions(
 // be undefined.
 SB_EXPORT bool SbWindowOnScreenKeyboardSuggestionsSupported(SbWindow window);
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 
 #ifdef __cplusplus
 }  // extern "C"

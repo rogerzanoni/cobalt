@@ -16,7 +16,7 @@
 #define BASE_STRING_UTIL_STARBOARD_H_
 
 #include <stdarg.h>
-#if SB_API_VERSION >= 16
+#if SB_API_VERSION >= 18
 #include <stdio.h>
 #endif
 

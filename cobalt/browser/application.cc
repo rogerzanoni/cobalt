@@ -910,7 +910,7 @@ Application::Application(const base::Closure& quit_closure, bool should_preload,
   AddCrashHandlerAnnotations(platform_info);
 
 #if SB_IS(EVERGREEN)
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   if (SbSystemGetExtension(kCobaltExtensionInstallationManagerName) &&
       !command_line->HasSwitch(switches::kDisableUpdaterModule)) {
 #else
@@ -1190,11 +1190,11 @@ void Application::HandleStarboardEvent(const SbEvent* starboard_event) {
     case kSbEventTypeStop:
     case kSbEventTypeUser:
     case kSbEventTypeVerticalSync:
-#if SB_API_VERSION >= 16
+#if SB_API_VERSION >= 18
     case kSbEventTypeReserved1:
 #else
     case kSbEventTypeOnScreenKeyboardSuggestionsUpdated:
-#endif  // SB_API_VERSION >= 16
+#endif  // SB_API_VERSION >= 18
       DLOG(WARNING) << "Unhandled Starboard event of type: "
                     << starboard_event->type;
   }
@@ -1281,11 +1281,11 @@ void Application::OnApplicationEvent(SbEventType event_type,
     case kSbEventTypeOsNetworkDisconnected:
     case kSbEventTypeOsNetworkConnected:
     case kSbEventDateTimeConfigurationChanged:
-#if SB_API_VERSION >= 16
+#if SB_API_VERSION >= 18
     case kSbEventTypeReserved1:
 #else
     case kSbEventTypeOnScreenKeyboardSuggestionsUpdated:
-#endif  // SB_API_VERSION >= 16
+#endif  // SB_API_VERSION >= 18
       NOTREACHED() << "Unexpected event type: " << event_type;
       return;
   }

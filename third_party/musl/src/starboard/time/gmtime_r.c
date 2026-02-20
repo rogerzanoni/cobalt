@@ -1,4 +1,4 @@
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 #include <time.h>
 
@@ -25,4 +25,4 @@ struct tm *gmtime_r(const time_t *restrict t, struct tm *restrict tm) {
   return tm;
 }
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18

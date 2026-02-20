@@ -15,7 +15,7 @@
 #include "starboard/common/memory.h"
 #include "starboard/configuration.h"
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 #include "starboard/memory.h"
 #include "testing/gtest/include/gtest/gtest.h"
@@ -71,4 +71,4 @@ TEST(SbMemoryAllocateAlignedTest, CanReadWriteToResult) {
 }  // namespace nplb
 }  // namespace starboard
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18

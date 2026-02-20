@@ -33,7 +33,7 @@
 
 #include "starboard/common/log.h"
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 SbMediaBufferStorageType SbMediaGetBufferStorageType() {
   return kSbMediaBufferStorageTypeMemory;
 }

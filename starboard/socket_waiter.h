@@ -79,7 +79,7 @@ typedef void (*SbSocketWaiterCallback)(SbSocketWaiter waiter,
                                        void* context,
                                        int ready_interests);
 
-#if SB_API_VERSION >= 16
+#if SB_API_VERSION >= 18
 // Function pointer for socket waiter callbacks.
 typedef void (*SbPosixSocketWaiterCallback)(SbSocketWaiter waiter,
                                             int socket,
@@ -149,7 +149,7 @@ SB_EXPORT bool SbSocketWaiterAdd(SbSocketWaiter waiter,
                                  int interests,
                                  bool persistent);
 
-#if SB_API_VERSION >= 16
+#if SB_API_VERSION >= 18
 SB_EXPORT bool SbPosixSocketWaiterAdd(SbSocketWaiter waiter,
                                       int socket,
                                       void* context,
@@ -171,7 +171,7 @@ SB_EXPORT bool SbPosixSocketWaiterAdd(SbSocketWaiter waiter,
 // |socket|: The socket to remove from the waiter.
 SB_EXPORT bool SbSocketWaiterRemove(SbSocketWaiter waiter, SbSocket socket);
 
-#if SB_API_VERSION >= 16
+#if SB_API_VERSION >= 18
 SB_EXPORT bool SbPosixSocketWaiterRemove(SbSocketWaiter waiter, int socket);
 #endif
 

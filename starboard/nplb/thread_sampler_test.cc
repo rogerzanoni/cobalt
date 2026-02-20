@@ -19,7 +19,7 @@
 #include "starboard/common/log.h"
 #include "starboard/common/time.h"
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 #include "starboard/nplb/thread_helpers.h"
 #else
 #include "starboard/nplb/posix_compliance/posix_thread_helpers.h"
@@ -31,7 +31,7 @@ namespace starboard {
 namespace nplb {
 namespace {
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 class CountingThread : public AbstractTestThread {
 #else
 class CountingThread : public posix::AbstractTestThread {
@@ -74,7 +74,7 @@ TEST(ThreadSamplerTest, RainyDayCreateSamplerInvalidThread) {
   // without without calling |SbThreadSamplerDelete| ASAN should not detect a
   // memory leak.
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   SbThreadSampler sampler = SbThreadSamplerCreate(kSbThreadInvalid);
 #else
   SbThreadSampler sampler = SbThreadSamplerCreate(0);

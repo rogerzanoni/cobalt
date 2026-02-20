@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 #include <string>
 
@@ -28,7 +28,7 @@ namespace starboard {
 namespace nplb {
 namespace {
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 #define EXPECT_FILE_EXISTS(path) \
   EXPECT_TRUE(SbFileExists(path.c_str())) << "Filename is " << path.c_str()
 
@@ -60,7 +60,7 @@ TEST(SbDirectoryOpenTest, SunnyDayStaticContent) {
   }
 }
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 TEST(SbDirectoryOpenTest, SunnyDayWithNullError) {
   std::string path = GetTempDir();
   EXPECT_FALSE(path.empty());
@@ -159,4 +159,4 @@ TEST(SbDirectoryOpenTest, FailsRegularFile) {
 }  // namespace
 }  // namespace nplb
 }  // namespace starboard
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18

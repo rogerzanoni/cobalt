@@ -85,7 +85,7 @@ SB_EXPORT bool SbDirectoryGetNext(SbDirectory directory,
                                   char* out_entry,
                                   size_t out_entry_size);
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 // Indicates whether SbDirectoryOpen is allowed for the given |path|.
 //
 // |path|: The path to be checked.
@@ -97,7 +97,7 @@ SB_EXPORT bool SbDirectoryCanOpen(const char* path);
 //
 // |path|: The path to be created.
 SB_EXPORT bool SbDirectoryCreate(const char* path);
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 
 #ifdef __cplusplus
 }  // extern "C"

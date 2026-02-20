@@ -14,7 +14,7 @@
 
 #include "starboard/shared/pthread/thread_sampler_internal.h"
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 SbThreadSampler SbThreadSamplerCreate(SbThread thread) {
   if (!SbThreadIsValid(thread)) {
     return kSbThreadSamplerInvalid;

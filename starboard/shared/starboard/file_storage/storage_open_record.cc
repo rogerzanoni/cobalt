@@ -23,12 +23,12 @@
 #include "starboard/configuration_constants.h"
 #include "starboard/shared/starboard/file_storage/storage_internal.h"
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 #include "starboard/user.h"
 SbStorageRecord SbStorageOpenRecord(SbUser user, const char* name) {
 #else
 SbStorageRecord SbStorageOpenRecord(const char* name) {
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
   std::vector<char> path(kSbFileMaxPath);
   bool success = starboard::shared::starboard::GetStorageFilePath(
       name, path.data(), static_cast<int>(path.size()));

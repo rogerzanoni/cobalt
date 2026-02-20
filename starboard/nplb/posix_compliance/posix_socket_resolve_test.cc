@@ -134,7 +134,7 @@ TEST_P(PosixSocketResolveTest, SunnyDayHints) {
   freeaddrinfo(ai);
 }
 
-#if SB_API_VERSION >= 16
+#if SB_API_VERSION >= 18
 TEST_P(PosixSocketResolveTest, SunnyDayFiltered) {
   struct addrinfo hints = {0};
   hints.ai_family = GetAddressFamily();
@@ -263,7 +263,7 @@ TEST_P(PosixSocketResolveTest, SunnyDayFlags) {
     freeaddrinfo(ai);
   }
 }
-#endif  // SB_API_VERSION >= 16
+#endif  // SB_API_VERSION >= 18
 
 TEST_P(PosixSocketResolveTest, Localhost) {
   struct addrinfo hints = {0};
@@ -273,7 +273,7 @@ TEST_P(PosixSocketResolveTest, Localhost) {
   struct addrinfo* ai = nullptr;
 
   int result = getaddrinfo(kLocalhost, 0, &hints, &ai);
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   if ((result == EAI_BADFLAGS || result == EAI_NODATA) &&
       GetAddressFamily() == AF_INET6) {
     // It's ok to return EAI_BADFLAGS or EAI_NODATA for IPv6 on Starboard < 16.

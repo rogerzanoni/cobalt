@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 #include "starboard/common/string.h"
 
@@ -20,4 +20,4 @@ int SbStringScan(const char* buffer, const char* pattern, va_list arguments) {
   return 0;
 }
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18

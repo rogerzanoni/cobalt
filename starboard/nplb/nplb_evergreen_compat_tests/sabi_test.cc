@@ -214,7 +214,7 @@ TEST_F(SabiTest, VerifySABI) {
   sabi_set.insert(kSabiJsonIdArmHardfp);
   sabi_set.insert(kSabiJsonIdArmSoftfp);
   sabi_set.insert(kSabiJsonIdArm64);
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   sabi_set.insert(kSabiJsonIdX86);
 #endif
   sabi_set.insert(kSabiJsonIdX64Sysv);
@@ -230,7 +230,7 @@ TEST_F(SabiTest, VerifySABI) {
       << std::endl
       << "  starboard/sabi/arm64/sabi-v" << SB_API_VERSION << ".json"
       << std::endl
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
       << "  starboard/sabi/x86/sabi-v" << SB_API_VERSION << ".json" << std::endl
 #endif
       << "  starboard/sabi/x64/sysv/sabi-v" << SB_API_VERSION << ".json"

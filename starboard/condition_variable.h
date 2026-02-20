@@ -21,7 +21,7 @@
 
 #include "starboard/configuration.h"
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 #include "starboard/export.h"
 #include "starboard/mutex.h"
@@ -124,5 +124,5 @@ SB_EXPORT bool SbConditionVariableSignal(SbConditionVariable* condition);
 }  // extern "C"
 #endif
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 #endif  // STARBOARD_CONDITION_VARIABLE_H_

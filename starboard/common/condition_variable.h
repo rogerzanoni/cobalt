@@ -50,11 +50,11 @@ class ConditionVariable {
 
  private:
   const Mutex* mutex_;
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   mutable SbConditionVariable condition_;
 #else
   mutable pthread_cond_t condition_;
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 };
 
 }  // namespace starboard

@@ -174,7 +174,7 @@ SbThreadPriority Win32PriorityToSbThreadPriority(int priority) {
 }
 }  // namespace
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 // Note that SetThreadAffinityMask() is not available on some
 // platforms (eg UWP). If it's necessary for a non-UWP platform,
 // please fork this implementation for UWP.
@@ -219,7 +219,7 @@ SbThread SbThreadCreate(int64_t stack_size,
 
   return &info->thread_private_;
 }
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 
 bool SbThreadSetPriority(SbThreadPriority priority) {
   return SetThreadPriority(GetCurrentThread(),

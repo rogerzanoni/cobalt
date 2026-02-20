@@ -28,7 +28,7 @@ const int64_t kStorageSize2 = kStorageSize * 2 + kStorageOffset;
 
 // Deletes the storage.
 static inline void ClearStorageRecord() {
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   SbStorageDeleteRecord(SbUserGetCurrent(), NULL);
 #else
   SbStorageDeleteRecord(NULL);
@@ -37,7 +37,7 @@ static inline void ClearStorageRecord() {
 
 // Deletes the named storage record.
 static inline void ClearStorageRecord(const char* name) {
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   SbStorageDeleteRecord(SbUserGetCurrent(), name);
 #else
   SbStorageDeleteRecord(name);
@@ -46,7 +46,7 @@ static inline void ClearStorageRecord(const char* name) {
 
 // Opens the storage record, validating that it is valid.
 static inline SbStorageRecord OpenStorageRecord() {
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   SbStorageRecord record = SbStorageOpenRecord(SbUserGetCurrent(), NULL);
 #else
   SbStorageRecord record = SbStorageOpenRecord(NULL);
@@ -57,7 +57,7 @@ static inline SbStorageRecord OpenStorageRecord() {
 
 // Opens the named storage record, validating that it is valid.
 static inline SbStorageRecord OpenStorageRecord(const char* name) {
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   SbStorageRecord record = SbStorageOpenRecord(SbUserGetCurrent(), name);
 #else
   SbStorageRecord record = SbStorageOpenRecord(name);

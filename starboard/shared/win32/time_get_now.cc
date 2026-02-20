@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 #include "starboard/time.h"
 
@@ -31,4 +31,4 @@ SbTime SbTimeGetNow() {
   return static_cast<SbTime>(large_int.QuadPart) / 10;
 }
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18

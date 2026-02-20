@@ -1,4 +1,4 @@
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 #include <stdint.h>
 #include <sys/time.h>
@@ -19,4 +19,4 @@ int gettimeofday(struct timeval* tp, void* tzp) {
   return 0;
 }
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18

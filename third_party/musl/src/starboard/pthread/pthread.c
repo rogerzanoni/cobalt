@@ -16,7 +16,7 @@
 
 #include <errno.h>
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 #include "starboard/common/log.h"
 #include "starboard/condition_variable.h"
@@ -259,4 +259,4 @@ int pthread_attr_setdetachstate(pthread_attr_t* attr, int detach_state) {
   return 0;
 }
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18

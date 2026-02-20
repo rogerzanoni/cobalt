@@ -14,23 +14,23 @@
 
 #include "starboard/common/time.h"
 
-#if SB_API_VERSION >= 16
+#if SB_API_VERSION >= 18
 
 #include <sys/time.h>
 #include <time.h>
 
 #include "starboard/common/log.h"
 
-#else  // SB_API_VERSION >= 16
+#else  // SB_API_VERSION >= 18
 
 #include "starboard/time.h"
 
-#endif  // SB_API_VERSION >= 16
+#endif  // SB_API_VERSION >= 18
 
 namespace starboard {
 
 int64_t CurrentMonotonicTime() {
-#if SB_API_VERSION >= 16
+#if SB_API_VERSION >= 18
   struct timespec ts;
   if (clock_gettime(CLOCK_MONOTONIC, &ts) != 0) {
     SB_NOTREACHED() << "clock_gettime(CLOCK_MONOTONIC) failed.";
@@ -38,13 +38,13 @@ int64_t CurrentMonotonicTime() {
   }
   return (static_cast<int64_t>(ts.tv_sec) * 1000000) +
          (static_cast<int64_t>(ts.tv_nsec) / 1000);
-#else   // SB_API_VERSION >= 16
+#else   // SB_API_VERSION >= 18
   return SbTimeGetMonotonicNow();
-#endif  // SB_API_VERSION >= 16
+#endif  // SB_API_VERSION >= 18
 }
 
 int64_t CurrentMonotonicThreadTime() {
-#if SB_API_VERSION >= 16
+#if SB_API_VERSION >= 18
   struct timespec ts;
   if (clock_gettime(CLOCK_THREAD_CPUTIME_ID, &ts) != 0) {
     // This is expected to happen on some systems, like Windows.
@@ -52,22 +52,22 @@ int64_t CurrentMonotonicThreadTime() {
   }
   return (static_cast<int64_t>(ts.tv_sec) * 1000000) +
          (static_cast<int64_t>(ts.tv_nsec) / 1000);
-#else   // SB_API_VERSION >= 16
+#else   // SB_API_VERSION >= 18
   return SbTimeGetMonotonicThreadNow();
-#endif  // SB_API_VERSION >= 16
+#endif  // SB_API_VERSION >= 18
 }
 
 int64_t CurrentPosixTime() {
-#if SB_API_VERSION >= 16
+#if SB_API_VERSION >= 18
   struct timeval tv;
   if (gettimeofday(&tv, NULL) != 0) {
     SB_NOTREACHED() << "Could not determine time of day.";
     return 0;
   }
   return (static_cast<int64_t>(tv.tv_sec) * 1000000) + tv.tv_usec;
-#else   // SB_API_VERSION >= 16
+#else   // SB_API_VERSION >= 18
   return SbTimeToPosix(SbTimeGetNow());
-#endif  // SB_API_VERSION >= 16
+#endif  // SB_API_VERSION >= 18
 }
 
 }  // namespace starboard

@@ -17,7 +17,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 int SbStringFormat(char* out_buffer,
                    size_t buffer_size,
                    const char* format,

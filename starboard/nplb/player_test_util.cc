@@ -408,7 +408,7 @@ bool IsOutputModeSupported(SbPlayerOutputMode output_mode,
 
 bool IsPartialAudioSupported() {
 #if SB_API_VERSION >= 15
-#if SB_API_VERSION >= 16
+#if SB_API_VERSION >= 18
   return kHasPartialAudioFramesSupport;
 #else
   return true;

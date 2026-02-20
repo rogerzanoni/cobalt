@@ -16,7 +16,7 @@
 #include "starboard/thread.h"
 #include "testing/gtest/include/gtest/gtest.h"
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 namespace starboard {
 namespace nplb {

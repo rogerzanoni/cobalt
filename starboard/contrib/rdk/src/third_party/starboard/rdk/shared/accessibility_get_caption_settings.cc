@@ -29,7 +29,7 @@
 
 #include "base/compiler_specific.h"
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 #include "starboard/accessibility.h"
 #include "starboard/common/memory.h"
 

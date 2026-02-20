@@ -55,7 +55,7 @@ static_assert(std::is_integral_v<PlatformThreadId>, "Always an integer value.");
 class PlatformThreadHandle {
  public:
 #if defined(STARBOARD)
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   typedef SbThread Handle;
 #else
   typedef pthread_t Handle;

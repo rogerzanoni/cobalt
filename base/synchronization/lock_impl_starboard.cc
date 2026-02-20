@@ -16,41 +16,41 @@
 
 #include "base/check_op.h"
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 #include "starboard/mutex.h"
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 
 namespace base {
 namespace internal {
 
 LockImpl::LockImpl() {
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   bool result = SbMutexCreate(&native_handle_);
   DCHECK(result);
 #else
   int result = pthread_mutex_init(&native_handle_, nullptr);
   DCHECK_EQ(result, 0);
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 }
 
 LockImpl::~LockImpl() {
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   bool result = SbMutexDestroy(&native_handle_);
   DCHECK(result);
 #else
   int result = pthread_mutex_destroy(&native_handle_);
   DCHECK_EQ(result, 0);
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 }
 
 void LockImpl::LockInternal() {
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   SbMutexResult result = SbMutexAcquire(&native_handle_);
   DCHECK_NE(kSbMutexDestroyed, result);
 #else
   int result = pthread_mutex_lock(&native_handle_);
   DCHECK_EQ(result, 0);
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 }
 
 }  // namespace internal

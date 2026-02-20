@@ -20,7 +20,7 @@
 #ifndef STARBOARD_ONCE_H_
 #define STARBOARD_ONCE_H_
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 #include "starboard/export.h"
 #include "starboard/types.h"
@@ -96,5 +96,5 @@ SB_EXPORT bool SbOnce(SbOnceControl* once_control,
 }
 #endif
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 #endif  // STARBOARD_ONCE_H_

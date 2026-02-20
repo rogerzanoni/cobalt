@@ -15,7 +15,7 @@
 #ifndef STARBOARD_SHARED_POSIX_TIME_INTERNAL_H_
 #define STARBOARD_SHARED_POSIX_TIME_INTERNAL_H_
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 #include <sys/time.h>
 #include <time.h>
@@ -55,6 +55,6 @@ inline int64_t FromTimeT(time_t time) {
 }
 }  // namespace
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 
 #endif  // STARBOARD_SHARED_POSIX_TIME_INTERNAL_H_

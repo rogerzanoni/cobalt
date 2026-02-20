@@ -25,7 +25,7 @@
 #include "starboard/configuration.h"
 #include "starboard/storage.h"
 #include "starboard/types.h"
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 #include "starboard/user.h"
 #endif
 
@@ -35,7 +35,7 @@ class StorageRecord {
  public:
   StorageRecord();
   explicit StorageRecord(const char* name);
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   explicit StorageRecord(SbUser user);
   StorageRecord(SbUser user, const char* name);
 #endif
@@ -52,7 +52,7 @@ class StorageRecord {
  private:
   void Initialize();
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   SbUser user_;
 #endif
   std::string name_;

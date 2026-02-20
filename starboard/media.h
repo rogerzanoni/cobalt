@@ -685,12 +685,12 @@ SB_EXPORT bool SbMediaGetAudioConfiguration(
 // Value used when a video's bits per pixel is not known.
 #define kSbMediaBitsPerPixelInvalid 0
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 typedef enum SbMediaBufferStorageType {
   kSbMediaBufferStorageTypeMemory,
   kSbMediaBufferStorageTypeFile,
 } SbMediaBufferStorageType;
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 
 // DEPRECATED with SB_API_VERSION 16
 //
@@ -703,11 +703,11 @@ typedef enum SbMediaBufferStorageType {
 // specific alignment requirement should check the alignment of the incoming
 // buffer, and make a copy when necessary.
 //
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 // The media buffer will be allocated using the returned alignment. Set this to
 // a larger value may increase the memory consumption of media buffers.
 //
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 SB_EXPORT int SbMediaGetBufferAlignment();
 
 // When the media stack needs more memory to store media buffers, it will
@@ -772,11 +772,11 @@ SB_EXPORT int SbMediaGetMaxBufferCapacity(SbMediaVideoCodec codec,
 // An implementation that has specific padding requirement should make a
 // copy of the incoming buffer when necessary.
 //
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 // Extra bytes allocated at the end of a media buffer to ensure that the buffer
 // can be use optimally by specific instructions like SIMD. Set to 0 to remove
 // any padding.
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 SB_EXPORT int SbMediaGetBufferPadding();
 
 // When either SbMediaGetInitialBufferCapacity or SbMediaGetBufferAllocationUnit
@@ -808,7 +808,7 @@ SB_EXPORT int SbMediaGetProgressiveBufferBudget(SbMediaVideoCodec codec,
                                                 int resolution_height,
                                                 int bits_per_pixel);
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 // Returns SbMediaBufferStorageType of type |SbMediaStorageTypeMemory| or
 // |SbMediaStorageTypeFile|. For memory storage, the media buffers will be
 // stored in main memory allocated by malloc functions. For file storage, the
@@ -817,7 +817,7 @@ SB_EXPORT int SbMediaGetProgressiveBufferBudget(SbMediaVideoCodec codec,
 // Note that when its value is "file" the media stack will still allocate memory
 // to cache the buffers in use.
 SB_EXPORT SbMediaBufferStorageType SbMediaGetBufferStorageType();
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 
 // DEPRECATED with SB_API_VERSION 16
 //

@@ -25,7 +25,7 @@
 #ifndef STARBOARD_USER_H_
 #define STARBOARD_USER_H_
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 #include "starboard/export.h"
 #include "starboard/types.h"
@@ -41,7 +41,7 @@ typedef struct SbUserPrivate SbUserPrivate;
 typedef SbUserPrivate* SbUser;
 
 // A set of string properties that can be queried on a user.
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 typedef enum SbUserPropertyId {
   // The URL to the avatar for a user. Avatars are not provided on all
   // platforms.
@@ -115,10 +115,10 @@ SB_EXPORT bool SbUserGetProperty(SbUser user,
 }  // extern "C"
 #endif
 
-#else  // SB_API_VERSION < 16
+#else  // SB_API_VERSION < 18
 
 #error This file is deprecated with SB_API_VERSION 16.
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 
 #endif  // STARBOARD_USER_H_

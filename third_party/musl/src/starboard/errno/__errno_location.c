@@ -1,4 +1,4 @@
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 #include <errno.h>
 #include <stdlib.h>
 
@@ -45,4 +45,4 @@ int *__errno_location(void) {
 
 weak_alias(__errno_location, ___errno_location);
 
-#endif // SB_API_VERSION < 16
+#endif // SB_API_VERSION < 18

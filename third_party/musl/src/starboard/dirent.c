@@ -1,4 +1,4 @@
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 #include <stdio.h>
 
@@ -64,4 +64,4 @@ int readdir_r(DIR* dir, struct dirent* dirent_buf, struct dirent** dirent){
     return -1;
 }
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18

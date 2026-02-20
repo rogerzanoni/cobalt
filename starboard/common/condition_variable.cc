@@ -23,7 +23,7 @@ namespace starboard {
 
 ConditionVariable::ConditionVariable(const Mutex& mutex)
     : mutex_(&mutex), condition_() {
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   SbConditionVariableCreate(&condition_, mutex_->mutex());
 #else
 #if !SB_HAS_QUIRK(NO_CONDATTR_SETCLOCK_SUPPORT)
@@ -39,30 +39,30 @@ ConditionVariable::ConditionVariable(const Mutex& mutex)
   int result = pthread_cond_init(&condition_, nullptr);
   SB_DCHECK(result == 0);
 #endif  // !SB_HAS_QUIRK(NO_CONDATTR_SETCLOCK_SUPPORT)
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 }
 
 ConditionVariable::~ConditionVariable() {
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   SbConditionVariableDestroy(&condition_);
 #else
   pthread_cond_destroy(&condition_);
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 }
 
 void ConditionVariable::Wait() const {
   mutex_->debugSetReleased();
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   SbConditionVariableWait(&condition_, mutex_->mutex());
 #else
   pthread_cond_wait(&condition_, mutex_->mutex());
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
   mutex_->debugSetAcquired();
 }
 
 bool ConditionVariable::WaitTimed(int64_t duration) const {
   mutex_->debugSetReleased();
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   bool was_signaled = SbConditionVariableIsSignaled(
       SbConditionVariableWaitTimed(&condition_, mutex_->mutex(), duration));
 #else
@@ -90,25 +90,25 @@ bool ConditionVariable::WaitTimed(int64_t duration) const {
 
   bool was_signaled =
       pthread_cond_timedwait(&condition_, mutex_->mutex(), &timeout) == 0;
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
   mutex_->debugSetAcquired();
   return was_signaled;
 }
 
 void ConditionVariable::Broadcast() const {
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   SbConditionVariableBroadcast(&condition_);
 #else
   pthread_cond_broadcast(&condition_);
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 }
 
 void ConditionVariable::Signal() const {
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   SbConditionVariableSignal(&condition_);
 #else
   pthread_cond_signal(&condition_);
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 }
 
 }  // namespace starboard

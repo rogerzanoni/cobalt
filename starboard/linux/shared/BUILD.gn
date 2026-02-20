@@ -382,7 +382,7 @@ static_library("starboard_platform_sources") {
     ]
   }
 
-  if (sb_api_version < 15) {
+  if (sb_api_version < 18) {
     sources -= [ "//starboard/shared/starboard/player/player_write_samples.cc" ]
     sources += enhanced_audio_sources
   }

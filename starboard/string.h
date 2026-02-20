@@ -30,7 +30,7 @@
 extern "C" {
 #endif
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 // Copies |source| into a buffer that is allocated by this function and that
 // can be freed with SbMemoryDeallocate. This function is meant to be a drop-in
 // replacement for |strdup|.
@@ -176,7 +176,7 @@ static inline int SbStringScanF(const char* buffer, const char* pattern, ...) {
   va_end(arguments);
   return result;
 }
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 
 #ifdef __cplusplus
 }  // extern "C"

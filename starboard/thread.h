@@ -95,7 +95,7 @@ static inline bool SbThreadIsValidPriority(SbThreadPriority priority) {
 // Returns the Thread ID of the currently executing thread.
 SB_EXPORT SbThreadId SbThreadGetId();
 
-#if SB_API_VERSION >= 16
+#if SB_API_VERSION >= 18
 // Set the thread priority of the current thread.
 SB_EXPORT bool SbThreadSetPriority(SbThreadPriority priority);
 
@@ -103,7 +103,7 @@ SB_EXPORT bool SbThreadSetPriority(SbThreadPriority priority);
 SB_EXPORT bool SbThreadGetPriority(SbThreadPriority* priority);
 #endif
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 // An opaque handle to a thread type.
 typedef void* SbThread;
 
@@ -335,7 +335,7 @@ SB_EXPORT bool SbThreadSamplerIsSupported();
 //
 // If successful, this function returns the newly created handle.
 // If unsuccessful, this function returns |kSbThreadSamplerInvalid|.
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 SB_EXPORT SbThreadSampler SbThreadSamplerCreate(SbThread thread);
 #else
 SB_EXPORT SbThreadSampler SbThreadSamplerCreate(pthread_t thread);

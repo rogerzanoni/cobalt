@@ -18,7 +18,7 @@
 namespace starboard {
 namespace nplb {
 
-#if SB_API_VERSION >= 16
+#if SB_API_VERSION >= 18
 
 TEST(SbAudioSinkIsAudioSampleTypeSupportedTest, SunnyDay) {
   bool float32_supported =
@@ -31,7 +31,7 @@ TEST(SbAudioSinkIsAudioSampleTypeSupportedTest, SunnyDay) {
   SbAudioSinkIsAudioSampleTypeSupported(kSbMediaAudioSampleTypeInt16Deprecated);
 }
 
-#else  // SB_API_VERSION >= 16
+#else  // SB_API_VERSION >= 18
 
 TEST(SbAudioSinkIsAudioSampleTypeSupportedTest, SunnyDay) {
   bool int16_supported = SbAudioSinkIsAudioSampleTypeSupported(
@@ -42,7 +42,7 @@ TEST(SbAudioSinkIsAudioSampleTypeSupportedTest, SunnyDay) {
   EXPECT_TRUE(int16_supported || float32_supported);
 }
 
-#endif  // SB_API_VERSION >= 16
+#endif  // SB_API_VERSION >= 18
 
 }  // namespace nplb
 }  // namespace starboard

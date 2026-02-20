@@ -15,7 +15,7 @@
 #include "cobalt/ui_navigation/interface.h"
 
 #include "starboard/common/spin_lock.h"
-#if SB_API_VERSION >= 16
+#if SB_API_VERSION >= 18
 #include <string.h>
 
 #include "starboard/system.h"
@@ -143,7 +143,7 @@ void DoBatchUpdate(void (*update_function)(void*), void* context) {
 
 NativeInterface InitializeInterface() {
   NativeInterface interface = {0};
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   SbUiNavInterface sb_ui_interface = {0};
   if (SbUiNavGetInterface(&sb_ui_interface)) {
     interface.create_item = sb_ui_interface.create_item;
@@ -167,7 +167,7 @@ NativeInterface InitializeInterface() {
     interface.do_batch_update = sb_ui_interface.do_batch_update;
     return interface;
   }
-#else   // SB_API_VERSION < 16
+#else   // SB_API_VERSION < 18
   const SbUiNavInterface* sb_ui_interface =
       static_cast<const SbUiNavInterface*>(
           SbSystemGetExtension(kCobaltExtensionUiNavigationName));
@@ -199,7 +199,7 @@ NativeInterface InitializeInterface() {
     interface.do_batch_update = sb_ui_interface->do_batch_update;
     return interface;
   }
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
   interface.create_item = &CreateItem;
   interface.destroy_item = &DestroyItem;
   interface.set_item_bounds = &SetItemBounds;

@@ -261,7 +261,7 @@ typedef enum SbEventType {
   // kSbEventOnScreenKeyboardInvalidTicket.
   kSbEventTypeOnScreenKeyboardBlurred,
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   // The platform has updated the on screen keyboard suggestions. This event is
   // triggered by the system or by the application's OnScreenKeyboard update
   // suggestions method. The event has int data representing a ticket. The
@@ -274,7 +274,7 @@ typedef enum SbEventType {
 #else
   // Reserved for deprecated events.
   kSbEventTypeReserved1,
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 
   // One or more of the fields returned by SbAccessibilityGetCaptionSettings
   // has changed.

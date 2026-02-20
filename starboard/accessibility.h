@@ -19,7 +19,7 @@
 #ifndef STARBOARD_ACCESSIBILITY_H_
 #define STARBOARD_ACCESSIBILITY_H_
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 #include "starboard/export.h"
 #include "starboard/types.h"
@@ -229,10 +229,10 @@ SB_EXPORT bool SbAccessibilitySetCaptionsEnabled(bool enabled);
 }  // extern "C"
 #endif
 
-#else  // SB_API_VERSION < 16
+#else  // SB_API_VERSION < 18
 
 #error This file is deprecated with SB_API_VERSION 16.
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 
 #endif  // STARBOARD_ACCESSIBILITY_H_

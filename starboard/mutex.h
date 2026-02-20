@@ -20,7 +20,7 @@
 #ifndef STARBOARD_MUTEX_H_
 #define STARBOARD_MUTEX_H_
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 #include "starboard/configuration.h"
 #include "starboard/export.h"
@@ -109,5 +109,5 @@ SB_EXPORT bool SbMutexRelease(SbMutex* mutex);
 }  // extern "C"
 #endif
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 #endif  // STARBOARD_MUTEX_H_

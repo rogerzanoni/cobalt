@@ -13,7 +13,7 @@
 // limitations under the License.
 
 // GetInfo is mostly tested in the course of other tests.
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 #include <string>
 
@@ -123,4 +123,4 @@ TEST(SbFileGetPathInfoTest, WorksOnStaticContentDirectories) {
 }  // namespace nplb
 }  // namespace starboard
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18

@@ -22,11 +22,11 @@
 
 #include <limits>
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 #include "starboard/accessibility.h"
-#else  // SB_API_VERSION < 16
+#else  // SB_API_VERSION < 18
 #include "starboard/android/shared/accessibility_extension.h"
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 
 #include "starboard/common/log.h"
 

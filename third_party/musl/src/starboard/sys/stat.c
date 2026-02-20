@@ -1,4 +1,4 @@
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 #include <errno.h>
 #include <stdio.h>
@@ -37,7 +37,7 @@ int stat(const char *path, struct stat *file_info)
         return -1;
     }
 
-    // In SB_API_VERSION < 16, all files are opened with S_IRUSR | S_IWUSR.
+    // In SB_API_VERSION < 18, all files are opened with S_IRUSR | S_IWUSR.
     // See starboard/shared/posix/impl/file_open.h.
     file_info->st_mode = S_IRUSR | S_IWUSR;
     if (out_info.is_directory){
@@ -53,4 +53,4 @@ int stat(const char *path, struct stat *file_info)
 
     return 0;
 }
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18

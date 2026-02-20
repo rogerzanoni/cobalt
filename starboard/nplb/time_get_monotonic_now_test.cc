@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 #include "starboard/nplb/time_constants.h"
 #include "starboard/time.h"
@@ -53,4 +53,4 @@ TEST(SbTimeGetMonotonicNowTest, IsMonotonic) {
 }  // namespace nplb
 }  // namespace starboard
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18

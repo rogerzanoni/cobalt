@@ -21,7 +21,7 @@
 
 class SbThreadSamplerPrivate {
  public:
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   explicit SbThreadSamplerPrivate(SbThread thread);
 #else
   explicit SbThreadSamplerPrivate(pthread_t thread);
@@ -30,14 +30,14 @@ class SbThreadSamplerPrivate {
 
   SbThreadContext Freeze();
   bool Thaw();
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   SbThread thread() { return thread_; }
 #else
   pthread_t thread() { return thread_; }
 #endif
 
  private:
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   SbThread thread_;
 #else
   pthread_t thread_;

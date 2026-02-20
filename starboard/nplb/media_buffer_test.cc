@@ -116,7 +116,7 @@ std::vector<void*> TryToAllocateMemory(int size,
                                    ? allocation_unit
                                    : (std::rand() % 500 + 100) * 1024;
     void* allocated_memory = NULL;
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
     allocated_memory = SbMemoryAllocateAligned(alignment, allocation_increment);
 #else
     posix_memalign(&allocated_memory, alignment, allocation_increment);
@@ -170,7 +170,7 @@ TEST(SbMediaBufferTest, Alignment) {
     // the test logic in one place.
     int alignment = SbMediaGetBufferAlignment();
 
-#if SB_API_VERSION >= 16
+#if SB_API_VERSION >= 18
     // SbMediaGetBufferAlignment() was deprecated in Starboard 16, its return
     // value is no longer used when allocating media buffers.  This is verified
     // explicitly here by ensuring its return value is sizeof(void*).
@@ -179,11 +179,11 @@ TEST(SbMediaBufferTest, Alignment) {
     // An implementation that has specific alignment requirement should check
     // the alignment of the incoming buffer, and make a copy when necessary.
     EXPECT_EQ(alignment, sizeof(void*));
-#else   // SB_API_VERSION >= 16
+#else   // SB_API_VERSION >= 18
     EXPECT_GE(alignment, 1);
     EXPECT_EQ(alignment & (alignment - 1), 0)
         << "Alignment must always be a power of 2";
-#endif  // SB_API_VERSION >= 16
+#endif  // SB_API_VERSION >= 18
   }
 }
 
@@ -201,7 +201,7 @@ TEST(SbMediaBufferTest, AllocationUnit) {
     allocated_ptrs = TryToAllocateMemory(initial_buffer_capacity,
                                          allocation_unit, sizeof(void*));
   }
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   if (!HasNonfatalFailure()) {
     for (SbMediaType type : kMediaTypes) {
       // The test will be run more than once, it's redundant but allows us to
@@ -226,7 +226,7 @@ TEST(SbMediaBufferTest, AllocationUnit) {
       }
     }
   }
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 
   for (void* ptr : allocated_ptrs) {
     free(ptr);
@@ -268,7 +268,7 @@ TEST(SbMediaBufferTest, MaxCapacity) {
 }
 
 TEST(SbMediaBufferTest, Padding) {
-#if SB_API_VERSION >= 16
+#if SB_API_VERSION >= 18
   // SbMediaGetBufferPadding() was deprecated in Starboard 16, its return value
   // is no longer used when allocating media buffers.  This is verified
   // explicitly here by ensuring its return value is 0.
@@ -276,9 +276,9 @@ TEST(SbMediaBufferTest, Padding) {
   // copy of the incoming buffer when necessary.
   EXPECT_EQ(SbMediaGetBufferPadding(), 0);
 
-#else   // SB_API_VERSION >= 16
+#else   // SB_API_VERSION >= 18
   EXPECT_GE(SbMediaGetBufferPadding(), 0);
-#endif  // SB_API_VERSION >= 16
+#endif  // SB_API_VERSION >= 18
 }
 
 TEST(SbMediaBufferTest, PoolAllocateOnDemand) {
@@ -305,7 +305,7 @@ TEST(SbMediaBufferTest, ProgressiveBudget) {
   }
 }
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 TEST(SbMediaBufferTest, StorageType) {
   // Just don't crash.
   SbMediaBufferStorageType type = SbMediaGetBufferStorageType();
@@ -316,17 +316,17 @@ TEST(SbMediaBufferTest, StorageType) {
   }
   SB_NOTREACHED();
 }
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 
 TEST(SbMediaBufferTest, UsingMemoryPool) {
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   // Just don't crash.
   SbMediaIsBufferUsingMemoryPool();
 #else
   EXPECT_TRUE(SbMediaIsBufferUsingMemoryPool())
       << "This function is deprecated. Media buffer pools are always "
       << "used in Starboard 16 and newer. Please see starboard/CHANGELOG.md";
-#endif  //  SB_API_VERSION < 16
+#endif  //  SB_API_VERSION < 18
 }
 
 TEST(SbMediaBufferTest, VideoBudget) {
@@ -350,17 +350,17 @@ TEST(SbMediaBufferTest, ValidatePerformance) {
       SbMediaGetBufferGarbageCollectionDurationThreshold);
   TEST_PERF_FUNCNOARGS_DEFAULT(SbMediaGetInitialBufferCapacity);
   TEST_PERF_FUNCNOARGS_DEFAULT(SbMediaIsBufferPoolAllocateOnDemand);
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   TEST_PERF_FUNCNOARGS_DEFAULT(SbMediaGetBufferStorageType);
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
   TEST_PERF_FUNCNOARGS_DEFAULT(SbMediaIsBufferUsingMemoryPool);
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   for (auto type : kMediaTypes) {
     TEST_PERF_FUNCNOARGS_DEFAULT(SbMediaGetBufferAlignment);
     TEST_PERF_FUNCNOARGS_DEFAULT(SbMediaGetBufferPadding);
   }
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 
   for (auto resolution : kVideoResolutions) {
     for (auto bits_per_pixel : kBitsPerPixelValues) {

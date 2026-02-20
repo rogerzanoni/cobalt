@@ -37,7 +37,7 @@ namespace base {
 class PlatformThreadRef {
  public:
 #if defined(STARBOARD)
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   typedef SbThread RefType;
 #else
   using RefType = pthread_t;

@@ -1,4 +1,4 @@
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 #include <time.h>
 
@@ -15,4 +15,4 @@ time_t time(time_t *t) {
   return time_s;
 }
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18

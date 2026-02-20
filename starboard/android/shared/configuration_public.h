@@ -53,7 +53,7 @@
 
 // --- Compiler Configuration ------------------------------------------------
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 // The platform's annotation for forcing a C function to be inlined.
 #define SB_C_FORCE_INLINE __inline__ __attribute__((always_inline))
 
@@ -75,7 +75,7 @@
 // memory. This is required for platforms that want to JIT.
 #define SB_CAN_MAP_EXECUTABLE_MEMORY 1
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 
 // --- Network Configuration -------------------------------------------------
 

@@ -66,7 +66,7 @@ typedef enum SbMemoryMapFlags {
       kSbMemoryMapProtectRead | kSbMemoryMapProtectWrite,
 } SbMemoryMapFlags;
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 #define SB_MEMORY_MAP_FAILED ((void*)-1)  // NOLINT(readability/casting)
 
@@ -219,7 +219,7 @@ SB_EXPORT bool SbMemoryProtect(void* virtual_address,
 // memory that has been written to and might be executed in the future.
 SB_EXPORT void SbMemoryFlush(void* virtual_address, int64_t size_bytes);
 #endif
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 
 #if SB_API_VERSION < 15
 
@@ -231,7 +231,7 @@ SB_EXPORT void SbMemoryGetStackBounds(void** out_high, void** out_low);
 
 #endif  // SB_API_VERSION < 15
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 // A wrapper that implements a drop-in replacement for |calloc|, which is used
 // in some packages.
 static SB_C_INLINE void* SbMemoryCalloc(size_t count, size_t size) {
@@ -267,7 +267,7 @@ SB_DEPRECATED_EXTERNAL(SB_EXPORT void* SbMemoryReallocateChecked(void* memory,
 SB_DEPRECATED_EXTERNAL(
     SB_EXPORT void* SbMemoryAllocateAlignedChecked(size_t alignment,
                                                    size_t size));
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 
 #ifdef __cplusplus
 }  // extern "C"

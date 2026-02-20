@@ -166,7 +166,7 @@ bool ConditionVariable::WaitFor(Mutex* mutex, const TimeDelta& rel_time) {
 #elif V8_OS_STARBOARD
 
 ConditionVariable::ConditionVariable() {
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   SbConditionVariableCreate(&native_handle_, nullptr);
 #else
 #if !SB_HAS_QUIRK(NO_CONDATTR_SETCLOCK_SUPPORT)
@@ -182,43 +182,43 @@ ConditionVariable::ConditionVariable() {
   int result = pthread_cond_init(&native_handle_, nullptr);
   DCHECK(result == 0);
 #endif  // !SB_HAS_QUIRK(NO_CONDATTR_SETCLOCK_SUPPORT)
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 }
 
 ConditionVariable::~ConditionVariable() {
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   SbConditionVariableDestroy(&native_handle_);
 #else
   pthread_cond_destroy(&native_handle_);
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 }
 
 void ConditionVariable::NotifyOne() {
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   SbConditionVariableSignal(&native_handle_);
 #else
   pthread_cond_signal(&native_handle_);
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 }
 
 void ConditionVariable::NotifyAll() {
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   SbConditionVariableBroadcast(&native_handle_);
 #else
   pthread_cond_broadcast(&native_handle_);
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 }
 
 void ConditionVariable::Wait(Mutex* mutex) {
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   SbConditionVariableWait(&native_handle_, &mutex->native_handle());
 #else
   pthread_cond_wait(&native_handle_, &mutex->native_handle());
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 }
 
 bool ConditionVariable::WaitFor(Mutex* mutex, const TimeDelta& rel_time) {
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   int64_t microseconds = static_cast<int64_t>(rel_time.InMicroseconds());
   SbConditionVariableResult result = SbConditionVariableWaitTimed(
       &native_handle_, &mutex->native_handle(), microseconds);
@@ -238,7 +238,7 @@ bool ConditionVariable::WaitFor(Mutex* mutex, const TimeDelta& rel_time) {
 
   int result = pthread_cond_timedwait(&native_handle_, &mutex->native_handle(), &delay_timestamp);
   return result == 0;
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 }
 
 #endif  // V8_OS_STARBOARD

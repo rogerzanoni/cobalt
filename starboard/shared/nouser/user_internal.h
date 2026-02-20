@@ -15,7 +15,7 @@
 #ifndef STARBOARD_SHARED_NOUSER_USER_INTERNAL_H_
 #define STARBOARD_SHARED_NOUSER_USER_INTERNAL_H_
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 #include "starboard/shared/internal_only.h"
 #include "starboard/user.h"
@@ -36,6 +36,6 @@ extern SbUserPrivate g_user;
 }  // namespace shared
 }  // namespace starboard
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 
 #endif  // STARBOARD_SHARED_NOUSER_USER_INTERNAL_H_

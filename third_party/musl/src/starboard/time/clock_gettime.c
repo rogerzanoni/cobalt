@@ -1,6 +1,6 @@
 #include <time.h>
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 #include "starboard/common/log.h"
 #include "starboard/time.h"
@@ -36,4 +36,4 @@ int clock_gettime(clockid_t clk, struct timespec *ts) {
   }
 }
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18

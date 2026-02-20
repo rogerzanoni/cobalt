@@ -14,7 +14,7 @@
 
 // Destroy is mostly Sunny Day tested in Create.
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 #include "starboard/common/condition_variable.h"
 #include "starboard/common/mutex.h"
@@ -39,4 +39,4 @@ TEST(SbConditionVariableDestroyTest, RainyDayNull) {
 }  // namespace nplb
 }  // namespace starboard
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18

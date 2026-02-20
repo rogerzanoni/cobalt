@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 #include "starboard/memory.h"
 
 static SbMemoryMapFlags ToSbMemoryMapFlags(int prot) {
@@ -58,4 +58,4 @@ int msync (void * addr, size_t len, int flags) {
   return 0;
 }
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18

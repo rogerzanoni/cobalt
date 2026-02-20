@@ -19,7 +19,7 @@ namespace starboard {
 namespace nplb {
 namespace {
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 TEST(SbStringCompareNoCaseNTest, SunnyDaySelf) {
   const char kString[] = "0123456789";
   EXPECT_EQ(0, SbStringCompareNoCaseN(kString, kString, strlen(kString)));
@@ -56,7 +56,7 @@ TEST(SbStringCompareNoCaseNTest, SunnyDayCase) {
   EXPECT_EQ(0,
             SbStringCompareNoCaseN(kString4, kString3, strlen(kString4) / 2));
 }
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 
 }  // namespace
 }  // namespace nplb

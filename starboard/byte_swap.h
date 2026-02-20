@@ -20,7 +20,7 @@
 #ifndef STARBOARD_BYTE_SWAP_H_
 #define STARBOARD_BYTE_SWAP_H_
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 #include "starboard/configuration.h"
 #include "starboard/export.h"
@@ -84,10 +84,10 @@ SB_EXPORT uint64_t SbByteSwapU64(uint64_t value);
 }  // extern "C"
 #endif
 
-#else  // SB_API_VERSION < 16
+#else  // SB_API_VERSION < 18
 
 #error This file is deprecated with SB_API_VERSION 16.
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 
 #endif  // STARBOARD_BYTE_SWAP_H_

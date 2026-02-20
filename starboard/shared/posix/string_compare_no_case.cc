@@ -17,7 +17,7 @@
 #include <string.h>  // Non-standard, required for some platforms.
 #include <strings.h>
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 int SbStringCompareNoCase(const char* string1, const char* string2) {
   return strcasecmp(string1, string2);
 }

@@ -16,7 +16,7 @@
 #define COBALT_UI_NAVIGATION_INTERFACE_H_
 
 #include "starboard/configuration.h"
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 #include "starboard/ui_navigation.h"
 #else
 #include "starboard/extension/ui_navigation.h"

@@ -22,9 +22,9 @@
 
 #include "starboard/configuration.h"
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 #include "starboard/mutex.h"
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 
 namespace starboard {
 
@@ -54,13 +54,13 @@ class Mutex {
 #endif
 
   friend class ConditionVariable;
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
   SbMutex* mutex() const;
   mutable SbMutex mutex_;
 #else
   pthread_mutex_t* mutex() const;
   mutable pthread_mutex_t mutex_;
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
   Mutex(const Mutex&) = delete;
   void operator=(const Mutex&) = delete;
 };

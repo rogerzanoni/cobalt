@@ -34,7 +34,7 @@ void* SbPageMapFile(void* addr,
                     int64_t file_offset,
                     int64_t size);
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 // Allocates |size_bytes| worth of physical memory pages and maps them into an
 // available virtual region. On some platforms, |name| appears in the debugger
 // and can be up to 32 bytes. Returns SB_MEMORY_MAP_FAILED on failure, as NULL
@@ -58,7 +58,7 @@ bool SbPageProtect(void* virtual_address, int64_t size_bytes, int flags);
 // always be a multiple of kSbMemoryPageSize.
 size_t SbPageGetMappedBytes();
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 
 #ifdef __cplusplus
 }  // extern "C"

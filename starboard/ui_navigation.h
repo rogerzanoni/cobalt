@@ -33,7 +33,7 @@
 #ifndef STARBOARD_UI_NAVIGATION_H_
 #define STARBOARD_UI_NAVIGATION_H_
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 #include "starboard/configuration.h"
 #include "starboard/export.h"
@@ -306,10 +306,10 @@ SB_EXPORT bool SbUiNavGetInterface(SbUiNavInterface* out_interface);
 }  // extern "C"
 #endif
 
-#else  // SB_API_VERSION < 16
+#else  // SB_API_VERSION < 18
 
 #error This file is deprecated with SB_API_VERSION 16.
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 
 #endif  // STARBOARD_UI_NAVIGATION_H_

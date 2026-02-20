@@ -183,7 +183,7 @@ TEST(PosixMemoryMapTest, CanChangeMemoryProtection) {
         continue;
       }
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 #if SB_CAN(MAP_EXECUTABLE_MEMORY)
       const bool kSbCanMapExecutableMemory = true;
 #else

@@ -238,7 +238,7 @@ const char kDisableTimerResolutionLimitHelp[] =
     "removed and the resolution will be 1us (or larger depending on the "
     "platform.";
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 const char kDisableUpdaterModule[] = "disable_updater_module";
 const char kDisableUpdaterModuleHelp[] =
     "Disables the Cobalt Evergreen UpdaterModule which is responsible for "
@@ -484,7 +484,7 @@ std::map<std::string, const char*> HelpMap() {
       {kDisableJavaScriptJit, kDisableJavaScriptJitHelp},
       {kDisableMapToMesh, kDisableMapToMeshHelp},
       {kDisableTimerResolutionLimit, kDisableTimerResolutionLimitHelp},
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
       {kDisableUpdaterModule, kDisableUpdaterModuleHelp},
 #endif
       {kEnableSkiaRasterizer, kEnableSkiaRasterizerHelp},

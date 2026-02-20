@@ -42,7 +42,7 @@
 #ifndef STARBOARD_IMAGE_H_
 #define STARBOARD_IMAGE_H_
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 #include "starboard/configuration.h"
 #include "starboard/decode_target.h"
@@ -95,10 +95,10 @@ SbImageDecode(SbDecodeTargetGraphicsContextProvider* context_provider,
 }  // extern "C"
 #endif
 
-#else  // SB_API_VERSION < 16
+#else  // SB_API_VERSION < 18
 
 #error This file is deprecated with SB_API_VERSION 16.
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
 
 #endif  // STARBOARD_IMAGE_H_

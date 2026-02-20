@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <wchar.h>
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 int SbStringFormatWide(wchar_t* out_buffer,
                        size_t buffer_size,
                        const wchar_t* format,

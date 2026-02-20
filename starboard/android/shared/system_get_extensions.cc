@@ -14,9 +14,9 @@
 
 #include "starboard/system.h"
 
-#if SB_API_VERSION >= 16
+#if SB_API_VERSION >= 18
 #include "starboard/android/shared/accessibility_extension.h"
-#endif  // SB_API_VERSION >= 16
+#endif  // SB_API_VERSION >= 18
 #include "starboard/android/shared/android_media_session_client.h"
 #include "starboard/android/shared/configuration.h"
 #include "starboard/android/shared/graphics.h"
@@ -84,11 +84,11 @@ const void* SbSystemGetExtension(const char* name) {
   if (strcmp(name, kStarboardExtensionPlayerSetMaxVideoInputSizeName) == 0) {
     return starboard::android::shared::GetPlayerSetMaxVideoInputSizeApi();
   }
-#if SB_API_VERSION >= 16
+#if SB_API_VERSION >= 18
   if (strcmp(name, kStarboardExtensionAccessibilityName) == 0) {
     return starboard::android::shared::GetAccessibilityApi();
   }
-#endif  // SB_API_VERSION >= 16
+#endif  // SB_API_VERSION >= 18
 #if SB_IS(EVERGREEN_COMPATIBLE)
   if (strcmp(name, kStarboardExtensionLoaderAppMetricsName) == 0) {
     return starboard::shared::starboard::GetLoaderAppMetricsApi();

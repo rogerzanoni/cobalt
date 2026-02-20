@@ -14,7 +14,7 @@
 
 // Thread joining is mostly tested in the other tests.
 
-#if SB_API_VERSION < 16
+#if SB_API_VERSION < 18
 
 #include "starboard/nplb/thread_helpers.h"
 #include "starboard/thread.h"
@@ -43,4 +43,4 @@ TEST(SbThreadDetachTest, RainyDayInvalid) {
 }  // namespace nplb
 }  // namespace starboard
 
-#endif  // SB_API_VERSION < 16
+#endif  // SB_API_VERSION < 18
