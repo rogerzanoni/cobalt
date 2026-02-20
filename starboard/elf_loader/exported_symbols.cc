@@ -34,6 +34,13 @@
 #include <stdlib.h>
 #include <sys/epoll.h>
 #include <sys/inotify.h>
+
+#define BIONIC_IOCTL_NO_SIGNEDNESS_OVERLOAD
+// Check the ioctl header in the AndroidSDK; this define
+// gets rid of an ioctl overload that causes problems when
+// trying to get the function's address
+#include <sys/ioctl.h>
+
 #include <sys/mman.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
@@ -261,6 +268,7 @@ ExportedSymbols::ExportedSymbols() {
   REGISTER_SYMBOL(inotify_add_watch);
   REGISTER_SYMBOL(inotify_init);
   REGISTER_SYMBOL(inotify_rm_watch);
+  REGISTER_SYMBOL(ioctl);
   REGISTER_SYMBOL(kill);
   REGISTER_SYMBOL(link);
   REGISTER_SYMBOL(listen);
