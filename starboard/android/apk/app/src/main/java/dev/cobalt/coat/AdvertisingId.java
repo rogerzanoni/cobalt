@@ -18,9 +18,9 @@ import static dev.cobalt.util.Log.TAG;
 
 import android.content.Context;
 import androidx.annotation.GuardedBy;
-import com.google.android.gms.ads.identifier.AdvertisingIdClient;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
+//import com.google.android.gms.ads.identifier.AdvertisingIdClient;
+//import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+//import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import dev.cobalt.util.Log;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
@@ -31,8 +31,8 @@ public class AdvertisingId {
   private final Context context;
   private final ExecutorService singleThreadExecutor;
 
-  @GuardedBy("advertisingIdInfoLock")
-  private volatile AdvertisingIdClient.Info advertisingIdInfo;
+  //@GuardedBy("advertisingIdInfoLock")
+  //private volatile AdvertisingIdClient.Info advertisingIdInfo;
 
   // Controls access to advertisingIdInfo
   private final Object advertisingIdInfoLock = new Object();
@@ -40,11 +40,12 @@ public class AdvertisingId {
   public AdvertisingId(Context context) {
     this.context = context;
     this.singleThreadExecutor = Executors.newSingleThreadExecutor();
-    this.advertisingIdInfo = null;
+    //this.advertisingIdInfo = null;
     refresh();
   }
 
   public void refresh() {
+    /*
     singleThreadExecutor.execute(
         () -> {
           try {
@@ -60,15 +61,17 @@ public class AdvertisingId {
             Log.e(TAG, "Failed to retrieve Advertising ID (IfA).");
           }
         });
+    */
   }
 
   public String getId() {
     String result = "";
+    /*
     synchronized (advertisingIdInfoLock) {
       if (advertisingIdInfo != null) {
         result = advertisingIdInfo.getId();
       }
-    }
+    }*/
     refresh();
     Log.d(TAG, "Returning IfA getId: " + result);
     return result;
@@ -76,11 +79,12 @@ public class AdvertisingId {
 
   public boolean isLimitAdTrackingEnabled() {
     boolean result = false;
+    /*
     synchronized (advertisingIdInfoLock) {
       if (advertisingIdInfo != null) {
         result = advertisingIdInfo.isLimitAdTrackingEnabled();
       }
-    }
+    }*/
     refresh();
     Log.d(TAG, "Returning IfA LimitedAdTrackingEnabled: " + Boolean.toString(result));
     return result;

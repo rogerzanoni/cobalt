@@ -104,7 +104,7 @@ public class StarboardBridge {
   private final HashMap<String, CobaltService> cobaltServices = new HashMap<>();
   private final HashMap<String, String> crashContext = new HashMap<>();
 
-  private static final String GOOGLE_PLAY_SERVICES_PACKAGE = "com.google.android.gms";
+  //private static final String GOOGLE_PLAY_SERVICES_PACKAGE = "com.google.android.gms";
   private static final String AMATI_EXPERIENCE_FEATURE =
       "com.google.android.feature.AMATI_EXPERIENCE";
   private final boolean isAmatiDevice;
@@ -804,7 +804,8 @@ public class StarboardBridge {
   @SuppressWarnings("unused")
   @UsedByNative
   protected long getPlayServicesVersion() {
-    try {
+    return 0;
+    /*try {
       if (android.os.Build.VERSION.SDK_INT < 28) {
         return appContext
             .getPackageManager()
@@ -824,7 +825,7 @@ public class StarboardBridge {
     } catch (Exception e) {
       Log.w(TAG, "Unable to query Google Play Services package version", e);
       return 0;
-    }
+    }*/
   }
 
   @SuppressWarnings("unused")
