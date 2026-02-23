@@ -18,7 +18,10 @@
 #include "starboard/elf_loader/elf.h"
 
 #include "starboard/elf_loader/dynamic_section.h"
+#include "starboard/elf_loader/exported_symbols.h"
 #include "starboard/elf_loader/program_table.h"
+
+using ::elf_loader::ExportedSymbols;
 
 namespace starboard {
 namespace elf_loader {
