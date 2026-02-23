@@ -19,7 +19,6 @@
 #include <string>
 #include <vector>
 
-namespace starboard {
 namespace elf_loader {
 
 // class representing all exported symbols
@@ -45,5 +44,4 @@ class ExportedSymbols {
 };
 
 }  // namespace elf_loader
-}  // namespace starboard
 #endif  // STARBOARD_ELF_LOADER_EXPORTED_SYMBOLS_H_
