@@ -216,6 +216,8 @@ config("starboard") {
       defines += [ "SB_IS_EVERGREEN_COMPATIBLE_LIBUNWIND=1" ]
     }
 
+    defines += [ "ENABLE_BUILDFLAG_ENABLE_COBALT_HERMETIC_HACKS" ]
+
     defines += [
       "STARBOARD_ATOMIC_INCLUDE=\"$starboard_path/atomic_public.h\"",
       "STARBOARD_CONFIGURATION_INCLUDE=\"$starboard_path/configuration_public.h\"",
