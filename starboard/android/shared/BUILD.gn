@@ -318,6 +318,7 @@ static_library("starboard_platform") {
     "directory_get_next.cc",
     "directory_internal.h",
     "directory_open.cc",
+    "dl_unwind_find_exidx.cc",
     "drm_create_system.cc",
     "drm_system.cc",
     "drm_system.h",

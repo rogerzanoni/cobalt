@@ -40,12 +40,27 @@ class PrintBacktraceOutputHandler : public BacktraceOutputHandler {
   virtual void HandleOutput(const char* output) {
     // NOTE: This code MUST be async-signal safe (it's used by in-process
     // stack dumping signal handler). NO malloc or stdio is allowed here.
-    SbLogRaw(output);
+    //
+    // Buffer output until a newline so that each stack frame is emitted as a
+    // single SbLogRaw call. Otherwise, a single frame is split across several
+    // lines (symbol, " [0x", address, "]").
+    for (const char* p = output; *p; ++p) {
+      if (buf_pos_ < sizeof(buf_) - 1)
+        buf_[buf_pos_++] = *p;
+      if (*p == '\n') {
+        buf_[buf_pos_] = '\0';
+        SbLogRaw(buf_);
+        buf_pos_ = 0;
+      }
+    }
   }
 
  private:
   PrintBacktraceOutputHandler(const PrintBacktraceOutputHandler&) = delete;
   PrintBacktraceOutputHandler& operator=(const PrintBacktraceOutputHandler&) = delete;
+
+  char buf_[2048];
+  size_t buf_pos_ = 0;
 };
 
 class StreamBacktraceOutputHandler : public BacktraceOutputHandler {
