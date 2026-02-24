@@ -86,6 +86,7 @@ void AppendSwitchesAndArguments(CommandLine* command_line,
       command_line->AppendArg(arg);
     }
   }
+  command_line->AppendArg("--disable-dev-shm-usage");
 }
 
 // Lowercase switches for backwards compatibility *on Windows*.
