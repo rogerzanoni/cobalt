@@ -64,7 +64,7 @@
 #include "starboard/shared/modular/starboard_layer_posix_errno_abi_wrappers.h"
 #include "starboard/shared/modular/starboard_layer_posix_eventfd_abi_wrappers.h"
 #include "starboard/shared/modular/starboard_layer_posix_fcntl_abi_wrappers.h"
-#include "starboard/shared/modular/starboard_layer_posix_mmap_abi_wrappers.h"
+#include "starboard/shared/modular/starboard_layer_posix_mman_abi_wrappers.h"
 #include "starboard/shared/modular/starboard_layer_posix_pipe2_abi_wrappers.h"
 #include "starboard/shared/modular/starboard_layer_posix_poll_abi_wrappers.h"
 #include "starboard/shared/modular/starboard_layer_posix_prctl_abi_wrappers.h"
@@ -275,6 +275,7 @@ ExportedSymbols::ExportedSymbols() {
   REGISTER_SYMBOL(madvise);
   REGISTER_SYMBOL(malloc);
   REGISTER_SYMBOL(malloc_usable_size);
+  REGISTER_SYMBOL(memfd_create);
   REGISTER_SYMBOL(mincore);
   REGISTER_SYMBOL(mkdir);
   REGISTER_SYMBOL(mkdtemp);

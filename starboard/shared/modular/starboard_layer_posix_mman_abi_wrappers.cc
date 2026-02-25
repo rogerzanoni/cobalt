@@ -12,18 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <sys/mman.h>
+#include "starboard/shared/modular/starboard_layer_posix_mman_abi_wrappers.h"
 
-extern "C" {
+#include <sys/mman.h>
 
 void* __abi_wrap_mmap(void* addr,
                       size_t len,
                       int prot,
                       int flags,
-                      int fildes,
-                      off_t off);
-
-void* mmap(void* addr, size_t len, int prot, int flags, int fildes, off_t off) {
-  return __abi_wrap_mmap(addr, len, prot, flags, fildes, off);
+                      int fd,
+                      musl_off_t off) {
+  return mmap(addr, len, prot, flags, fd, static_cast<off_t>(off));
 }
+
+int __abi_wrap_memfd_create(const char *name, unsigned int flags) {
+  return memfd_create(name, flags);
 }
