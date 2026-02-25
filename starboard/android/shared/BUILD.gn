@@ -393,6 +393,7 @@ static_library("starboard_platform") {
     "posix_emu/dirent.cc",
     "posix_emu/errno.cc",
     "posix_emu/file.cc",
+    "posix_emu/mman.cc",
     "posix_emu/pthread.cc",
     "posix_emu/stat.cc",
     "sanitizer_options.cc",

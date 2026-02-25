@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef STARBOARD_SHARED_MODULAR_STARBOARD_LAYER_POSIX_MMAP_ABI_WRAPPERS_H_
-#define STARBOARD_SHARED_MODULAR_STARBOARD_LAYER_POSIX_MMAP_ABI_WRAPPERS_H_
+#ifndef STARBOARD_SHARED_MODULAR_STARBOARD_LAYER_POSIX_MMAN_ABI_WRAPPERS_H_
+#define STARBOARD_SHARED_MODULAR_STARBOARD_LAYER_POSIX_MMAN_ABI_WRAPPERS_H_
 
 #include <stdint.h>
 #include <sys/types.h>
@@ -40,9 +40,10 @@ extern "C" {
 #endif
 
 SB_EXPORT void* __abi_wrap_mmap(void*, size_t, int, int, int, musl_off_t);
+SB_EXPORT int __abi_wrap_memfd_create(const char *name, unsigned int flags);
 
 #ifdef __cplusplus
 }  // extern "C"
 #endif
 
-#endif  // STARBOARD_SHARED_MODULAR_STARBOARD_LAYER_POSIX_MMAP_ABI_WRAPPERS_H_
+#endif  // STARBOARD_SHARED_MODULAR_STARBOARD_LAYER_POSIX_MMAN_ABI_WRAPPERS_H_
