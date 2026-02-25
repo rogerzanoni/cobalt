@@ -806,18 +806,17 @@ bool ExecutableExistsInPath(Environment* env,
 #if !BUILDFLAG(IS_APPLE)
 // This is implemented in file_util_apple.mm for Mac.
 bool GetTempDir(FilePath* path) {
+#if BUILDFLAG(IS_ANDROID) || BUILDFLAG(USE_EVERGREEN)
+  return PathService::Get(DIR_CACHE, path);
+#else
   const char* tmp = getenv("TMPDIR");
   if (tmp) {
     *path = FilePath(tmp);
     return true;
   }
-
-#if BUILDFLAG(IS_ANDROID)
-  return PathService::Get(DIR_CACHE, path);
-#else
   *path = FilePath("/tmp");
   return true;
-#endif
+#endif  // BUILDFLAG(IS_ANDROID) || BUILDFLAG(USE_EVERGREEN)
 }
 #endif  // !BUILDFLAG(IS_APPLE)
 
@@ -1358,7 +1357,7 @@ int GetMaximumPathComponentLength(const FilePath& path) {
 #if !BUILDFLAG(IS_ANDROID)
 // This is implemented in file_util_android.cc for that platform.
 bool GetShmemTempDir(bool executable, FilePath* path) {
-#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_AIX)
+#if (BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_AIX)) && !BUILDFLAG(USE_EVERGREEN)
   bool disable_dev_shm = false;
 #if !BUILDFLAG(IS_CHROMEOS)
   disable_dev_shm = CommandLine::ForCurrentProcess()->HasSwitch(
@@ -1374,7 +1373,7 @@ bool GetShmemTempDir(bool executable, FilePath* path) {
     *path = FilePath("/dev/shm");
     return true;
   }
-#endif  // BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_AIX)
+#endif  // (BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_AIX)) && !BUILDFLAG(USE_EVERGREEN)
   return GetTempDir(path);
 }
 #endif  // !BUILDFLAG(IS_ANDROID)
