@@ -26,5 +26,5 @@ copy("nplb_file_tests_data") {
 
   subdir = "starboard/nplb/file_tests"
 
-  outputs = [ "$sb_static_contents_output_data_dir/test/$subdir/{{source_target_relative}}" ]
+  outputs = [ "$sb_static_contents_output_data_dir/app/cobalt/content/test/$subdir/{{source_target_relative}}" ]
 }
