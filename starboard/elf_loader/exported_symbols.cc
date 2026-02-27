@@ -253,8 +253,10 @@ ExportedSymbols::ExportedSymbols() {
   REGISTER_SYMBOL(pause);
   REGISTER_SYMBOL(pipe);
   REGISTER_SYMBOL(posix_memalign);
+#if !SB_IS(MODULAR)
   REGISTER_SYMBOL(pread);
   REGISTER_SYMBOL(pwrite);
+#endif
   REGISTER_SYMBOL(raise);
   REGISTER_SYMBOL(rand);
   REGISTER_SYMBOL(rand_r);
@@ -336,6 +338,8 @@ ExportedSymbols::ExportedSymbols() {
   REGISTER_WRAPPER(pipe2);
   REGISTER_WRAPPER(poll);
   REGISTER_WRAPPER(prctl);
+  REGISTER_WRAPPER(pread);
+  REGISTER_WRAPPER(pwrite);
   REGISTER_WRAPPER(pthread_attr_init);
   REGISTER_WRAPPER(pthread_attr_destroy);
   REGISTER_WRAPPER(pthread_attr_getdetachstate);
