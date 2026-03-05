@@ -13,7 +13,10 @@
 // limitations under the License.
 
 #include <fcntl.h>
+#include <sys/uio.h>
+#include <unistd.h>
 
+#include <string>
 #include <vector>
 
 #include "starboard/android/shared/asset_manager.h"
@@ -34,6 +37,7 @@ using starboard::android::shared::OpenAndroidAsset;
 extern "C" {
 int __real_close(int fildes);
 int __real_open(const char* path, int oflag, ...);
+ssize_t __real_writev(int fildes, const struct iovec* iov, int iovcnt);
 
 int __wrap_close(int fildes) {
   AssetManager* asset_manager = AssetManager::GetInstance();
@@ -56,6 +60,38 @@ int __wrap_open(const char* path, int oflag, ...) {
     }
   }
   return AssetManager::GetInstance()->Open(path, oflag);
+}
+
+ssize_t __wrap_writev(int fildes, const struct iovec* iov, int iovcnt) {
+  // Intercept stdout/stderr writes and route them through SbLogRaw so that
+  // output (e.g. GTest results) appears in Android logcat.
+  if (fildes == STDOUT_FILENO || fildes == STDERR_FILENO) {
+    ssize_t total = 0;
+    std::string remaining;
+    for (int i = 0; i < iovcnt; ++i) {
+      if (iov[i].iov_base && iov[i].iov_len > 0) {
+        remaining.append(static_cast<const char*>(iov[i].iov_base),
+                         iov[i].iov_len);
+        total += iov[i].iov_len;
+      }
+    }
+
+    // Take logging mutex?
+    size_t start = 0, pos;
+    while ((pos = remaining.find('\n', start)) != std::string::npos) {
+      remaining[pos] = '\0';
+      if (pos > start) {
+        SbLogRaw(remaining.c_str() + start);
+      }
+      start = pos + 1;
+    }
+    if (start < remaining.size()) {
+      SbLogRaw(remaining.c_str() + start);
+    }
+    return total;
+  }
+
+  return __real_writev(fildes, iov, iovcnt);
 }
 
 }  // extern "C"
