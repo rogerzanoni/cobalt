@@ -795,8 +795,11 @@ std::ostream& operator<<(std::ostream& out,
                          const VirtualClosure& virtual_closure) {
   out << Brief(*virtual_closure.shared()) << std::endl;
   out << Brief(*virtual_closure.feedback_vector()) << std::endl;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-value"
   !virtual_closure.context_hints().IsEmpty() &&
       out << virtual_closure.context_hints() << "):" << std::endl;
+#pragma clang diagnostic pop
   return out;
 }
 
