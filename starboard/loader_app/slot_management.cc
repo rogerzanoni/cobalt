@@ -391,7 +391,7 @@ void* LoadSlotManagedLibrary(const std::string& app_key,
     std::string lib_path;
     bool use_compression;
     struct stat info;
-    if (stat(compressed_lib_path.data(), &info) == 0) {
+    if (false && stat(compressed_lib_path.data(), &info) == 0) {
       lib_path = compressed_lib_path.data();
       use_compression = true;
     } else if (stat(uncompressed_lib_path.data(), &info) == 0) {
