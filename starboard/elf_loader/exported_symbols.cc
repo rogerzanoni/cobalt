@@ -30,7 +30,9 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <ifaddrs.h>
+#include <link.h>
 #include <malloc.h>
+#include <net/if.h>
 #include <netdb.h>
 #include <poll.h>
 #include <sched.h>
@@ -44,6 +46,7 @@
 // trying to get the function's address
 #include <sys/ioctl.h>
 
+#include <sys/inotify.h>
 #include <sys/mman.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
@@ -245,6 +248,9 @@ ExportedSymbols::ExportedSymbols() {
   REGISTER_SYMBOL(calloc);
   REGISTER_SYMBOL(close);
   REGISTER_SYMBOL(fdatasync);
+  REGISTER_SYMBOL(dlopen);
+  REGISTER_SYMBOL(dlsym);
+  REGISTER_SYMBOL(dl_iterate_phdr);
   REGISTER_SYMBOL(dup);
   REGISTER_SYMBOL(dup2);
   REGISTER_SYMBOL(epoll_create);
@@ -253,11 +259,17 @@ ExportedSymbols::ExportedSymbols() {
   REGISTER_SYMBOL(epoll_wait);
   REGISTER_SYMBOL(free);
   REGISTER_SYMBOL(freeifaddrs);
+  REGISTER_SYMBOL(fputwc);
   REGISTER_SYMBOL(fsync);
   REGISTER_SYMBOL(getcwd);
   REGISTER_SYMBOL(getpeername);
   REGISTER_SYMBOL(getsockname);
   REGISTER_SYMBOL(getsockopt);
+  REGISTER_SYMBOL(getuid);
+  REGISTER_SYMBOL(if_indextoname);
+  REGISTER_SYMBOL(inotify_add_watch);
+  REGISTER_SYMBOL(inotify_init);
+  REGISTER_SYMBOL(inotify_rm_watch);
   REGISTER_SYMBOL(isatty);
   REGISTER_SYMBOL(ioctl);
   REGISTER_SYMBOL(kill);
@@ -291,6 +303,7 @@ ExportedSymbols::ExportedSymbols() {
   REGISTER_SYMBOL(rename);
   REGISTER_SYMBOL(sched_get_priority_max);
   REGISTER_SYMBOL(sched_get_priority_min);
+  REGISTER_SYMBOL(sched_setscheduler);
   REGISTER_SYMBOL(sched_yield);
   REGISTER_SYMBOL(select);
   REGISTER_SYMBOL(send);
