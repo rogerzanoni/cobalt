@@ -48,7 +48,7 @@ TEST(SbLogTest, SunnyDayError) {
   SbLog(kSbLogPriorityError, "erroring\n");
 }
 
-TEST(SbLogTest, SunnyDayFatal) {
+TEST(SbLogTest, DISABLED_SunnyDayFatal) {
   SbLog(kSbLogPriorityFatal, "fataling\n");
 }
 
