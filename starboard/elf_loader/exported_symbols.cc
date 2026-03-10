@@ -117,6 +117,7 @@ ExportedSymbols::ExportedSymbols() {
   REGISTER_SYMBOL(kSbMaxThreadLocalKeys);
   REGISTER_SYMBOL(kSbMaxThreadNameLength);
   REGISTER_SYMBOL(kSbMaxThreads);
+  REGISTER_SYMBOL(SbMediaGetMaxBufferCapacity);
   REGISTER_SYMBOL(kSbMediaMaxAudioBitrateInBitsPerSecond);
   REGISTER_SYMBOL(kSbMediaMaxVideoBitrateInBitsPerSecond);
   REGISTER_SYMBOL(kSbMemoryPageSize);
@@ -244,6 +245,7 @@ ExportedSymbols::ExportedSymbols() {
   REGISTER_SYMBOL(SbWindowSetDefaultOptions);
 
   // POSIX APIs
+  REGISTER_SYMBOL(alarm);
   REGISTER_SYMBOL(aligned_alloc);
   REGISTER_SYMBOL(calloc);
   REGISTER_SYMBOL(close);
@@ -313,6 +315,7 @@ ExportedSymbols::ExportedSymbols() {
   REGISTER_SYMBOL(srand);
   REGISTER_SYMBOL(symlink);
   REGISTER_SYMBOL(usleep);
+  REGISTER_SYMBOL(vswprintf);
   REGISTER_SYMBOL(write);
 
   // Linux APIs
