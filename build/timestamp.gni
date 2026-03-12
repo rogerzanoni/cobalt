@@ -11,7 +11,8 @@ if (is_android) {
 
   # Ensure the exec_script() runs only once in default debug configs to
   # minimize "gn gen" overhead.
-  if (!enable_android_secondary_abi) {
+  if (!enable_android_secondary_abi &&
+      !(is_cobalt && build_with_separate_cobalt_toolchain)) {
     assert(
         current_toolchain == default_toolchain,
         "Trying to run compute_build_timestamp.py in toolchain: $current_toolchain")
