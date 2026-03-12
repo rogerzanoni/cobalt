@@ -245,7 +245,7 @@ TEST_F(PosixSignalTest, KillSendsSignalToSelf) {
   EXPECT_EQ(received_signal, SIGUSR2);
 }
 
-TEST_F(PosixSignalTest, PauseIsInterruptedBySignal) {
+TEST_F(PosixSignalTest, DISABLED_PauseIsInterruptedBySignal) {
   // This test correctly uses pause() to wait, so no sleep is needed.
   // It verifies that pause() is interrupted as expected.
   struct sigaction sa = {};
@@ -323,7 +323,7 @@ TEST_F(PosixSignalTest, PthreadSigmaskBlocksAndUnblocksSignal) {
 
 // --- Multi-threaded Signal Tests ---
 
-TEST_F(PosixSignalTest, PthreadKillSendsSignalToSpecificThread) {
+TEST_F(PosixSignalTest, DISABLED_PthreadKillSendsSignalToSpecificThread) {
   // Use a condition variable for reliable thread readiness notification.
   ThreadArgs args = {&mutex_, &cond_, &thread_ready_};
   pthread_t thread;

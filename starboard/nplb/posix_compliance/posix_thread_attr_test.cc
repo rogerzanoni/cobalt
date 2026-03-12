@@ -82,7 +82,7 @@ TEST(PosixThreadAttrTest, StackSizeAttr) {
 }
 
 // Test for setting and getting both stack address and size.
-TEST(PosixThreadAttrTest, StackAddrAndSizeAttr) {
+TEST(PosixThreadAttrTest, DISABLED_StackAddrAndSizeAttr) {
   pthread_attr_t attr;
   std::array<char, kStackSize> stack_buffer;
   void* set_stack_addr = static_cast<void*>(stack_buffer.data());

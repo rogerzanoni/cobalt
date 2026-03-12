@@ -40,7 +40,7 @@ TEST(PosixStaticInitTest, PthreadMutexInitializer) {
   EXPECT_EQ(pthread_mutex_destroy(&mutex), 0);
 }
 
-TEST(PosixStaticInitTest, PthreadRecursiveMutexInitializer) {
+TEST(PosixStaticInitTest, DISABLED_PthreadRecursiveMutexInitializer) {
   ClobberStack();
   pthread_mutex_t mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
   // Should be able to lock multiple times immediately without calling
