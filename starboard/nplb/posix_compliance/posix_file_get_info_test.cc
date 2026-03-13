@@ -86,8 +86,8 @@ TEST(PosixFileGetInfoTest, WorksOnStaticContentFiles) {
 }
 
 TEST(PosixFileGetInfoTest, WorksOnADirectory) {
-  char dir_template[] = "/tmp/fstat_test_dir.XXXXXX";
-  char* dir_path = mkdtemp(dir_template);
+  std::string dir_template = GetTempDir() + "fstat_test_dir.XXXXXX";
+  char* dir_path = mkdtemp(dir_template.data());
   ASSERT_NE(dir_path, nullptr);
 
   int fd = open(dir_path, O_RDONLY);
@@ -106,8 +106,8 @@ TEST(PosixFileGetInfoTest, FollowsSymbolicLink) {
   ScopedRandomFile target_file(file_size);
   std::string target_path = target_file.filename();
 
-  char dir_template[] = "/tmp/fstat_test_dir.XXXXXX";
-  char* dir_path = mkdtemp(dir_template);
+  std::string dir_template = GetTempDir() + "fstat_test_dir.XXXXXX";
+  char* dir_path = mkdtemp(dir_template.data());
   ASSERT_NE(dir_path, nullptr);
 
   std::string link_path = std::string(dir_path) + "/symlink";
@@ -132,8 +132,8 @@ TEST(PosixFileGetInfoTest, ReportsHardLinkCount) {
   ScopedRandomFile file;
   std::string path1 = file.filename();
 
-  char dir_template[] = "/tmp/fstat_test_dir.XXXXXX";
-  char* dir_path = mkdtemp(dir_template);
+  std::string dir_template = GetTempDir() + "fstat_test_dir.XXXXXX";
+  char* dir_path = mkdtemp(dir_template.data());
   ASSERT_NE(dir_path, nullptr);
 
   std::string path2 = std::string(dir_path) + "/hardlink";

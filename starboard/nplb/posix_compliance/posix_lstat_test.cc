@@ -66,8 +66,8 @@ TEST(PosixLstatTest, LstatOnExistingDirectory) {
 }
 
 TEST(PosixLstatTest, DirectoryWithSubdirectory) {
-  char template_name[] = "/tmp/lstat_test_XXXXXX";
-  char* parent_dir_path = mkdtemp(template_name);
+  std::string template_name = GetTempDir() + "lstat_test_XXXXXX";
+  char* parent_dir_path = mkdtemp(template_name.data());
   std::string child_dir_path_str = std::string(parent_dir_path) + "/child";
 
   ASSERT_EQ(mkdir(child_dir_path_str.c_str(), 0755), 0);
