@@ -718,3 +718,19 @@ ssize_t __abi_wrap_pread(int fd, void *buf, size_t size, musl_off_t ofs) {
 ssize_t __abi_wrap_pwrite(int fd, void *buf, size_t size, musl_off_t ofs) {
   return pwrite(fd, buf, size, static_cast<off_t>(ofs));
 }
+
+ssize_t __abi_wrap_readlink(const char *path, char *buf, size_t bufsize) {
+  if (bufsize == 0 || bufsize > SSIZE_MAX) {
+    errno = EINVAL;
+    return -1;
+  }
+  return readlink(path, buf, bufsize);
+}
+
+ssize_t __abi_wrap_readlinkat(int dirfd, const char *path, char *buf, size_t bufsize) {
+  if (bufsize == 0 || bufsize > SSIZE_MAX) {
+    errno = EINVAL;
+    return -1;
+  }
+  return readlinkat(dirfd, path, buf, bufsize);
+}

@@ -82,4 +82,15 @@ int pwrite(int fd, void *buf, size_t size, off_t ofs) {
   return __abi_wrap_pwrite(fd, buf, size, ofs);
 }
 
+ssize_t __abi_wrap_readlink(const char *path, char *buf, size_t bufsize);
+
+ssize_t readlink(const char *path, char *buf, size_t bufsize);
+  return __abi_wrap_readlink(path, buf, bufsize);
+}
+
+ssize_t __abi_wrap_readlinkat(const char *path, char *buf, size_t bufsize);
+
+ssize_t readlinkat(int dirfd, const char *path, char *buf, size_t bufsize) {
+  return __abi_wrap_readlinkat(dirfd, path, buf, bufsize);
+}
 }  // extern "C"
