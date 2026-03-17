@@ -41,7 +41,11 @@ const size_t kPathSize = kSbFileMaxPath + 1;
 std::string GetTempDir() {
   // It seems there's absolutely no way to get to std::string without a copy.
   std::vector<char> path(kPathSize, 0);
-  if (!SbSystemGetPath(kSbSystemPathTempDirectory, path.data(), path.size())) {
+  SbSystemPathId temp_path_id = kSbSystemPathTempDirectory;
+#if BUILDFLAG(IS_ANDROID) || BUILDFLAG(USE_EVERGREEN)
+  temp_path_id = kSbSystemPathCacheDirectory;
+#endif  // BUILDFLAG(IS_ANDROID) || BUILDFLAG(USE_EVERGREEN)
+  if (!SbSystemGetPath(temp_path_id, path.data(), path.size())) {
     return "";
   }
 
