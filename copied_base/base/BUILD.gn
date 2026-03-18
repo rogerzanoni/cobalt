@@ -1762,7 +1762,7 @@ component("base") {
       "process/launch_starboard.cc",
     ]
     deps += [
-      "//starboard:starboard_group",
+      "//starboard:starboard_headers_only",
       "//starboard/common",
     ]
   }
