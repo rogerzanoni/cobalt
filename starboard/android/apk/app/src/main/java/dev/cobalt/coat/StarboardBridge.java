@@ -43,6 +43,7 @@ import dev.cobalt.util.DisplayUtil;
 import dev.cobalt.util.Holder;
 import dev.cobalt.util.Log;
 import dev.cobalt.util.UsedByNative;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
@@ -329,7 +330,12 @@ public class StarboardBridge {
   @SuppressWarnings("unused")
   @UsedByNative
   protected String getFilesAbsolutePath() {
-    return appContext.getFilesDir().getAbsolutePath();
+    try {
+      return appContext.getFilesDir().getCanonicalPath();
+    } catch (IOException e) {
+      e.printStackTrace();
+      return appContext.getFilesDir().getAbsolutePath();
+    }
   }
 
   /**
@@ -339,7 +345,12 @@ public class StarboardBridge {
   @SuppressWarnings("unused")
   @UsedByNative
   protected String getCacheAbsolutePath() {
-    return appContext.getCacheDir().getAbsolutePath();
+    try {
+      return appContext.getCacheDir().getCanonicalPath();
+    } catch (IOException e) {
+      e.printStackTrace();
+      return appContext.getCacheDir().getAbsolutePath();
+    }
   }
 
   /**
