@@ -16,6 +16,7 @@
 #include <unistd.h>
 
 #include "starboard/common/string.h"
+#include "starboard/configuration_constants.h"
 #include "starboard/nplb/file_helpers.h"
 #include "testing/gmock/include/gmock/gmock.h"
 #include "testing/gtest/include/gtest/gtest.h"
@@ -44,7 +45,7 @@ class FileTempTest : public ::testing::Test {
 };
 
 TEST_F(FileTempTest, MkdtempBasicSuccess) {
-  const std::string tmpl = GetTempDir() + "my_temp_dir.XXXXXX";
+  const std::string tmpl = GetTempDir() + kSbFileSepString + "my_temp_dir.XXXXXX";
   char buffer[tmpl.length() + 1];
   strcpy(buffer, tmpl.c_str());
 
@@ -54,7 +55,7 @@ TEST_F(FileTempTest, MkdtempBasicSuccess) {
 }
 
 TEST_F(FileTempTest, MkdtempInvalidTemplate) {
-  const std::string tmpl = GetTempDir() + "invalid_template";
+  const std::string tmpl = GetTempDir() + kSbFileSepString + "invalid_template";
   char buffer[tmpl.length() + 1];
   strcpy(buffer, tmpl.c_str());
 
@@ -82,7 +83,7 @@ TEST_F(FileTempTest, MkdtempNonExistentPath) {
 }
 
 TEST_F(FileTempTest, MkstempBasicSuccess) {
-  const std::string tmpl = GetTempDir() + "test_file.XXXXXX";
+  const std::string tmpl = GetTempDir() + kSbFileSepString + "test_file.XXXXXX";
   char buffer[tmpl.size() + 1];
   strcpy(buffer, tmpl.c_str());
 
@@ -94,7 +95,7 @@ TEST_F(FileTempTest, MkstempBasicSuccess) {
 }
 
 TEST_F(FileTempTest, MkstempInvalidTemplate) {
-  const std::string tmpl = GetTempDir() + "invalid_template";
+  const std::string tmpl = GetTempDir() + kSbFileSepString + "invalid_template";
   char buffer[tmpl.size() + 1];
   strcpy(buffer, tmpl.c_str());
 
@@ -122,7 +123,7 @@ TEST_F(FileTempTest, MkstempNonExistentPath) {
 }
 
 TEST_F(FileTempTest, MkstempFileIsOpened) {
-  const std::string tmpl = GetTempDir() + "open_file_test.XXXXXX";
+  const std::string tmpl = GetTempDir() + kSbFileSepString + "open_file_test.XXXXXX";
   char buffer[tmpl.size() + 1];
   strcpy(buffer, tmpl.c_str());
 
@@ -141,7 +142,7 @@ TEST_F(FileTempTest, MkstempFileIsOpened) {
 }
 
 TEST_F(FileTempTest, MkostempBasicSuccess) {
-  const std::string tmpl = GetTempDir() + "test_ostemp_file.XXXXXX";
+  const std::string tmpl = GetTempDir() + kSbFileSepString + "test_ostemp_file.XXXXXX";
   char buffer[tmpl.size() + 1];
   strcpy(buffer, tmpl.c_str());
 
@@ -158,7 +159,7 @@ TEST_F(FileTempTest, MkostempBasicSuccess) {
 }
 
 TEST_F(FileTempTest, MkostempWithFlags) {
-  const std::string tmpl = GetTempDir() + "test_ostemp_flags.XXXXXX";
+  const std::string tmpl = GetTempDir() + kSbFileSepString + "test_ostemp_flags.XXXXXX";
   char buffer[tmpl.size() + 1];
   strcpy(buffer, tmpl.c_str());
 
@@ -170,7 +171,7 @@ TEST_F(FileTempTest, MkostempWithFlags) {
 }
 
 TEST_F(FileTempTest, MkostempInvalidTemplate) {
-  const std::string tmpl = GetTempDir() + "invalid_template";
+  const std::string tmpl = GetTempDir() + kSbFileSepString + "invalid_template";
   char buffer[tmpl.size() + 1];
   strcpy(buffer, tmpl.c_str());
 
@@ -198,7 +199,7 @@ TEST_F(FileTempTest, MkostempNonExistentPath) {
 }
 
 TEST_F(FileTempTest, MkostempWriteFile) {
-  const std::string tmpl = GetTempDir() + "mkostemp_write_test.XXXXXX";
+  const std::string tmpl = GetTempDir() + kSbFileSepString + "mkostemp_write_test.XXXXXX";
   char buffer[tmpl.size() + 1];
   strcpy(buffer, tmpl.c_str());
 

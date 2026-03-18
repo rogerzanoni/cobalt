@@ -19,6 +19,7 @@
 #include <unistd.h>
 
 #include "starboard/common/file.h"
+#include "starboard/configuration_constants.h"
 #include "starboard/nplb/file_helpers.h"
 #include "testing/gtest/include/gtest/gtest.h"
 
@@ -265,7 +266,7 @@ TYPED_TEST(PosixFileReadTest, ReadStaticContent) {
 
 TYPED_TEST(PosixFileReadTest, PreadSuccess) {
   // Create a temporary file.
-  std::string tmpl = GetTempDir() + "pread_test.XXXXXX";
+  std::string tmpl = GetTempDir() + kSbFileSepString + "pread_test.XXXXXX";
   char buffer[tmpl.size() + 1];
   strcpy(buffer, tmpl.c_str());
   int fd = mkstemp(buffer);
@@ -294,7 +295,7 @@ TYPED_TEST(PosixFileReadTest, PreadSuccess) {
 
 TYPED_TEST(PosixFileReadTest, PreadOffset) {
   // Create a temporary file.
-  std::string tmpl = GetTempDir() + "pread_offset_test.XXXXXX";
+  std::string tmpl = GetTempDir() + kSbFileSepString + "pread_offset_test.XXXXXX";
   char buffer[tmpl.size() + 1];
   strcpy(buffer, tmpl.c_str());
   int fd = mkstemp(buffer);
@@ -322,7 +323,7 @@ TYPED_TEST(PosixFileReadTest, PreadOffset) {
 
 TYPED_TEST(PosixFileReadTest, PreadReadMore) {
   // Create a temporary file.
-  std::string tmpl = GetTempDir() + "pread_read_more.XXXXXX";
+  std::string tmpl = GetTempDir() + kSbFileSepString + "pread_read_more.XXXXXX";
   char buffer[tmpl.size() + 1];
   strcpy(buffer, tmpl.c_str());
   int fd = mkstemp(buffer);

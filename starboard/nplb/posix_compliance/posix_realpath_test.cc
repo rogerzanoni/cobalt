@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "starboard/configuration_constants.h"
 #include "starboard/nplb/file_helpers.h"
 #include "testing/gtest/include/gtest/gtest.h"
 
@@ -37,7 +38,7 @@ const mode_t kUserRwx = S_IRWXU;
 class PosixRealpathTest : public ::testing::Test {
  protected:
   void SetUp() override {
-    std::string template_name = GetTempDir() + "realpath_test_XXXXXX";
+    std::string template_name = GetTempDir() + kSbFileSepString + "realpath_test_XXXXXX";
     char* dir_name = mkdtemp(template_name.data());
     ASSERT_NE(dir_name, nullptr) << "mkdtemp failed: " << strerror(errno);
     test_dir_ = dir_name;

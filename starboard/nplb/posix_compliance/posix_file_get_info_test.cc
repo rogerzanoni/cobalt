@@ -18,6 +18,7 @@
 #include <iostream>
 
 #include "starboard/common/time.h"
+#include "starboard/configuration_constants.h"
 #include "starboard/nplb/file_helpers.h"
 #include "starboard/system.h"
 #include "testing/gtest/include/gtest/gtest.h"
@@ -86,7 +87,7 @@ TEST(PosixFileGetInfoTest, WorksOnStaticContentFiles) {
 }
 
 TEST(PosixFileGetInfoTest, WorksOnADirectory) {
-  std::string dir_template = GetTempDir() + "fstat_test_dir.XXXXXX";
+  std::string dir_template = GetTempDir() + kSbFileSepString + "fstat_test_dir.XXXXXX";
   char* dir_path = mkdtemp(dir_template.data());
   ASSERT_NE(dir_path, nullptr);
 
@@ -106,7 +107,7 @@ TEST(PosixFileGetInfoTest, FollowsSymbolicLink) {
   ScopedRandomFile target_file(file_size);
   std::string target_path = target_file.filename();
 
-  std::string dir_template = GetTempDir() + "fstat_test_dir.XXXXXX";
+  std::string dir_template = GetTempDir() + kSbFileSepString + "fstat_test_dir.XXXXXX";
   char* dir_path = mkdtemp(dir_template.data());
   ASSERT_NE(dir_path, nullptr);
 
@@ -132,7 +133,7 @@ TEST(PosixFileGetInfoTest, ReportsHardLinkCount) {
   ScopedRandomFile file;
   std::string path1 = file.filename();
 
-  std::string dir_template = GetTempDir() + "fstat_test_dir.XXXXXX";
+  std::string dir_template = GetTempDir() + kSbFileSepString + "fstat_test_dir.XXXXXX";
   char* dir_path = mkdtemp(dir_template.data());
   ASSERT_NE(dir_path, nullptr);
 

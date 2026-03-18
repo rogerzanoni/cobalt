@@ -42,7 +42,7 @@ namespace {
 class PosixReadlinkTest : public ::testing::Test {
  protected:
   void SetUp() override {
-    std::string template_name = GetTempDir() + "readlink_test_XXXXXX";
+    std::string template_name = GetTempDir() + kSbFileSepString + "readlink_test_XXXXXX";
     char* dir_name = mkdtemp(template_name.data());
     ASSERT_NE(dir_name, nullptr) << "mkdtemp failed: " << strerror(errno);
     test_dir_ = dir_name;
