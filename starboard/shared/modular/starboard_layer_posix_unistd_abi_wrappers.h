@@ -243,6 +243,8 @@ SB_EXPORT ssize_t __abi_wrap_readlink(const char *path, char *buf, size_t bufsiz
 
 SB_EXPORT ssize_t __abi_wrap_readlinkat(int dirfd, const char *path, char *buf, size_t bufsize);
 
+SB_EXPORT int __abi_wrap_close(int fildes);
+
 #ifdef __cplusplus
 }  // extern "C"
 #endif

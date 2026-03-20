@@ -24,6 +24,12 @@
 #include "starboard/shared/modular/starboard_layer_posix_stat_abi_wrappers.h"
 #include "starboard/shared/modular/starboard_layer_posix_unistd_abi_wrappers.h"
 
+#if defined(ANDROID)
+#include "starboard/android/shared/asset_manager.h"
+
+using starboard::android::shared::AssetManager;
+#endif
+
 namespace {
 int musl_conf_to_platform_conf(int name) {
   switch (name) {
@@ -733,4 +739,15 @@ ssize_t __abi_wrap_readlinkat(int dirfd, const char *path, char *buf, size_t buf
     return -1;
   }
   return readlinkat(dirfd, path, buf, bufsize);
+}
+
+int __abi_wrap_close(int fildes) {
+#if defined(ANDROID)
+  // Route asset file descriptors through the AssetManager
+  AssetManager* asset_manager = AssetManager::GetInstance();
+  if (asset_manager->IsAssetFd(fildes)) {
+    return asset_manager->Close(fildes);
+  }
+#endif
+  return close(fildes);
 }

@@ -248,7 +248,7 @@ ExportedSymbols::ExportedSymbols() {
   REGISTER_SYMBOL(alarm);
   REGISTER_SYMBOL(aligned_alloc);
   REGISTER_SYMBOL(calloc);
-  REGISTER_SYMBOL(close);
+  REGISTER_WRAPPER(close);
   REGISTER_SYMBOL(fdatasync);
   REGISTER_SYMBOL(dlopen);
   REGISTER_SYMBOL(dlsym);

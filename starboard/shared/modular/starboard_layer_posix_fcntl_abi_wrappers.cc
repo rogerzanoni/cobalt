@@ -20,6 +20,14 @@
 #include "starboard/common/log.h"
 #include "starboard/shared/modular/starboard_layer_posix_stat_abi_wrappers.h"
 
+#if defined(ANDROID)
+#include "starboard/android/shared/asset_manager.h"
+#include "starboard/android/shared/file_internal.h"
+
+using starboard::android::shared::AssetManager;
+using starboard::android::shared::IsAndroidAssetPath;
+#endif
+
 int convert_musl_cmd_to_platform_cmd(int musl_cmd) {
   switch (musl_cmd) {
     case MUSL_F_DUPFD:
@@ -301,6 +309,14 @@ SB_EXPORT int __abi_wrap_fcntl(int fildes, int cmd, ...) {
 
 int __abi_wrap_openat(int fildes, const char* path, int oflag, ...) {
   fildes = (fildes == MUSL_AT_FDCWD) ? AT_FDCWD : fildes;
+
+#if defined(ANDROID)
+  // Route asset paths through android's asset manager
+  if (fildes == AT_FDCWD && path && IsAndroidAssetPath(path)) {
+    return AssetManager::GetInstance()->Open(path, oflag);
+  }
+#endif
+
   if ((oflag & O_CREAT) || (oflag & O_TMPFILE) == O_TMPFILE) {
     va_list ap;
     va_start(ap, oflag);
