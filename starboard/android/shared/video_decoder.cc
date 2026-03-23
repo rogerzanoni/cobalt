@@ -285,6 +285,10 @@ void StubDrmSessionKeyStatusesChangedFunc(SbDrmSystem drm_system,
                                           int number_of_keys,
                                           const SbDrmKeyId* key_ids,
                                           const SbDrmKeyStatus* key_statuses) {}
+void StubDrmSessionClosedFunc(SbDrmSystem drm_system,
+                              void* context,
+                              const void* session_id,
+                              int session_id_size) {}
 
 }  // namespace
 
@@ -382,7 +386,8 @@ VideoDecoder::VideoDecoder(const VideoStreamInfo& video_stream_info,
     SB_DCHECK(!drm_system_);
     drm_system_to_enforce_tunnel_mode_.reset(new DrmSystem(
         "com.youtube.widevine.l3", nullptr, StubDrmSessionUpdateRequestFunc,
-        StubDrmSessionUpdatedFunc, StubDrmSessionKeyStatusesChangedFunc));
+        StubDrmSessionUpdatedFunc, StubDrmSessionKeyStatusesChangedFunc,
+        StubDrmSessionClosedFunc));
     drm_system_ = drm_system_to_enforce_tunnel_mode_.get();
   }
 

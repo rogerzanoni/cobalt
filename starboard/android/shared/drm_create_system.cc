@@ -40,7 +40,8 @@ SbDrmSystem SbDrmCreateSystem(
 
   DrmSystem* drm_system =
       new DrmSystem(key_system, context, update_request_callback,
-                    session_updated_callback, key_statuses_changed_callback);
+                    session_updated_callback, key_statuses_changed_callback,
+                    session_closed_callback);
   if (!drm_system->is_valid()) {
     delete drm_system;
     return kSbDrmSystemInvalid;

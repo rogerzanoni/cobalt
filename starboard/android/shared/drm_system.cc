@@ -181,13 +181,15 @@ DrmSystem::DrmSystem(
     void* context,
     SbDrmSessionUpdateRequestFunc update_request_callback,
     SbDrmSessionUpdatedFunc session_updated_callback,
-    SbDrmSessionKeyStatusesChangedFunc key_statuses_changed_callback)
+    SbDrmSessionKeyStatusesChangedFunc key_statuses_changed_callback,
+    SbDrmSessionClosedFunc session_closed_callback)
     : Thread("DrmSystemThread"),
       key_system_(key_system),
       context_(context),
       update_request_callback_(update_request_callback),
       session_updated_callback_(session_updated_callback),
       key_statuses_changed_callback_(key_statuses_changed_callback),
+      session_closed_callback_(session_closed_callback),
       j_media_drm_bridge_(NULL),
       j_media_crypto_(NULL),
       hdcp_lost_(false) {
@@ -360,6 +362,7 @@ void DrmSystem::CloseSession(const void* session_id, int session_id_size) {
   }
   env->CallVoidMethodOrAbort(j_media_drm_bridge_, "closeSession", "([B)V",
                              j_session_id.Get());
+  session_closed_callback_(this, context_, session_id, session_id_size);
 }
 
 DrmSystem::DecryptStatus DrmSystem::Decrypt(InputBuffer* buffer) {
