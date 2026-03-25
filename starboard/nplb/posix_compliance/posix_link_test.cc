@@ -79,26 +79,26 @@ TEST(PosixLinkTest, FailsIfNewPathExists) {
 }
 
 TEST(PosixLinkTest, FailsOnDirectory) {
-  const char* dir_path = "dir_to_link.tmp";
-  const char* new_path = "new_dir_link.tmp";
-  ASSERT_EQ(mkdir(dir_path, kUserRwx), 0)
+  std::string dir_path = GetTempDir() + kSbFileSepString + "dir_to_link.tmp";
+  std::string new_path = GetTempDir() + kSbFileSepString + "new_dir_link.tmp";
+  ASSERT_EQ(mkdir(dir_path.c_str(), kUserRwx), 0)
       << "mkdir failed with error: " << strerror(errno);
 
-  EXPECT_EQ(link(dir_path, new_path), -1);
+  EXPECT_EQ(link(dir_path.c_str(), new_path.c_str()), -1);
   EXPECT_EQ(errno, EPERM);
 
-  rmdir(dir_path);
+  rmdir(dir_path.c_str());
 }
 
 TEST(PosixLinkTest, FailsWithSymbolicLinkLoopInDestPath) {
   // Setup a temporary directory for this test.
-  const char* dir_path = "eloop_test_dir";
-  ASSERT_EQ(mkdir(dir_path, kUserRwx), 0)
+  std::string dir_path = GetTempDir() + kSbFileSepString + "eloop_test_dir";
+  ASSERT_EQ(mkdir(dir_path.c_str(), kUserRwx), 0)
       << "mkdir failed with error: " << strerror(errno);
 
   ScopedRandomFile old_file;
-  const std::string link_a_path = std::string(dir_path) + "/link_a";
-  const std::string link_b_path = std::string(dir_path) + "/link_b";
+  const std::string link_a_path = std::string(dir_path.c_str()) + "/link_a";
+  const std::string link_b_path = std::string(dir_path.c_str()) + "/link_b";
 
   // Create a symlink loop using relative paths: link_a -> link_b, and link_b ->
   // link_a
@@ -115,7 +115,7 @@ TEST(PosixLinkTest, FailsWithSymbolicLinkLoopInDestPath) {
   // Cleanup
   unlink(link_a_path.c_str());
   unlink(link_b_path.c_str());
-  rmdir(dir_path);
+  rmdir(dir_path.c_str());
 }
 
 TEST(PosixLinkTest, FailsIfNewPathComponentNotDirectory) {
@@ -155,13 +155,13 @@ TEST(PosixLinkTest, FailsIfNewPathIsTooLong) {
 }
 
 TEST(PosixLinkTest, FailsWithSymbolicLinkLoopInSourcePath) {
-  const char* dir_path = "eloop_test_dir_old";
-  ASSERT_EQ(mkdir(dir_path, kUserRwx), 0)
+  std::string dir_path = GetTempDir() + kSbFileSepString + "eloop_test_dir_old";
+  ASSERT_EQ(mkdir(dir_path.c_str(), kUserRwx), 0)
       << "mkdir failed with error: " << strerror(errno);
 
-  const std::string link_a_path = std::string(dir_path) + "/link_a";
-  const std::string link_b_path = std::string(dir_path) + "/link_b";
-  const std::string new_path = std::string(dir_path) + "/new_link";
+  const std::string link_a_path = std::string(dir_path.c_str()) + "/link_a";
+  const std::string link_b_path = std::string(dir_path.c_str()) + "/link_b";
+  const std::string new_path = std::string(dir_path.c_str()) + "/new_link";
 
   ASSERT_EQ(symlink("link_b", link_a_path.c_str()), 0)
       << "symlink failed with error: " << strerror(errno);
@@ -176,7 +176,7 @@ TEST(PosixLinkTest, FailsWithSymbolicLinkLoopInSourcePath) {
 
   unlink(link_a_path.c_str());
   unlink(link_b_path.c_str());
-  rmdir(dir_path);
+  rmdir(dir_path.c_str());
 }
 
 TEST(PosixLinkTest, FailsIfOldPathComponentNotDirectory) {
