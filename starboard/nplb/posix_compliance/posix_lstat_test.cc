@@ -33,6 +33,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <string>
 
 #include "starboard/configuration_constants.h"
 #include "starboard/file.h"
@@ -87,53 +88,53 @@ TEST(PosixLstatTest, DirectoryWithSubdirectory) {
 TEST(PosixLstatTest, LstatOnSymbolicLinkToFile) {
   ScopedRandomFile target_file;
 
-  const char* link_path = "link_to_file.tmp";
+  std::string link_path = GetTempDir() + kSbFileSepString + "link_to_file.tmp";
   std::string target_filename = target_file.filename();
 
-  ASSERT_EQ(symlink(target_filename.c_str(), link_path), 0);
+  ASSERT_EQ(symlink(target_filename.c_str(), link_path.c_str()), 0);
 
   struct stat sb;
-  EXPECT_EQ(lstat(link_path, &sb), 0);
+  EXPECT_EQ(lstat(link_path.c_str(), &sb), 0);
   // lstat should report the type of the link itself, not the target.
   EXPECT_TRUE(S_ISLNK(sb.st_mode));
   // The size of a symlink is the length of the path it contains.
   EXPECT_GE(sb.st_size, 0);
   EXPECT_EQ(static_cast<unsigned long>(sb.st_size), target_filename.length());
   EXPECT_EQ(sb.st_nlink, 1u);
-  unlink(link_path);
+  unlink(link_path.c_str());
 }
 
 TEST(PosixLstatTest, LstatOnSymbolicLinkToDirectory) {
-  const char* dir_path = "target_dir.tmp";
-  const char* link_path = "link_to_dir.tmp";
+  std::string dir_path = GetTempDir() + kSbFileSepString + "target_dir.tmp";
+  std::string link_path = GetTempDir() + kSbFileSepString + "link_to_dir.tmp";
 
-  ASSERT_EQ(mkdir(dir_path, 0755), 0);
-  ASSERT_EQ(symlink(dir_path, link_path), 0);
+  ASSERT_EQ(mkdir(dir_path.c_str(), 0755), 0);
+  ASSERT_EQ(symlink(dir_path.c_str(), link_path.c_str()), 0);
 
   struct stat sb;
-  EXPECT_EQ(lstat(link_path, &sb), 0);
+  EXPECT_EQ(lstat(link_path.c_str(), &sb), 0);
   EXPECT_TRUE(S_ISLNK(sb.st_mode));
   EXPECT_GE(sb.st_size, 0);
-  EXPECT_EQ(static_cast<unsigned long>(sb.st_size), strlen(dir_path));
+  EXPECT_EQ(static_cast<unsigned long>(sb.st_size), strlen(dir_path.c_str()));
   EXPECT_EQ(sb.st_nlink, 1u);
-  unlink(link_path);
-  rmdir(dir_path);
+  unlink(link_path.c_str());
+  rmdir(dir_path.c_str());
 }
 
 TEST(PosixLstatTest, LstatOnDanglingSymbolicLink) {
-  const char* target_path = "non_existent_target";
-  const char* link_path = "dangling_link.tmp";
+  std::string target_path = GetTempDir() + kSbFileSepString + "non_existent_target";
+  std::string link_path = GetTempDir() + kSbFileSepString + "dangling_link.tmp";
 
   // Create a symlink to a target that does not exist.
-  ASSERT_EQ(symlink(target_path, link_path), 0);
+  ASSERT_EQ(symlink(target_path.c_str(), link_path.c_str()), 0);
 
   struct stat sb;
-  EXPECT_EQ(lstat(link_path, &sb), 0);
+  EXPECT_EQ(lstat(link_path.c_str(), &sb), 0);
   EXPECT_TRUE(S_ISLNK(sb.st_mode));
   EXPECT_GE(sb.st_size, 0);
-  EXPECT_EQ(static_cast<unsigned long>(sb.st_size), strlen(target_path));
+  EXPECT_EQ(static_cast<unsigned long>(sb.st_size), strlen(target_path.c_str()));
   EXPECT_EQ(sb.st_nlink, 1u);
-  unlink(link_path);
+  unlink(link_path.c_str());
 }
 
 TEST(LstatTest, PathComponentNotADirectory) {
