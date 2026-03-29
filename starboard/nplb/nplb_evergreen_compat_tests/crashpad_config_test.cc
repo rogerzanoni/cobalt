@@ -41,10 +41,15 @@ TEST(CrashpadConfigTest, VerifyUploadCert) {
   ASSERT_LE(kSbFileMaxPath, buffer.size());
 
   std::string cert_location(buffer.data());
+// Android already includes "app/cobalt/content" in the content dir
+#if !defined(ANDROID)
   cert_location.append(std::string(kSbFileSepString) + "app" +
                        kSbFileSepString + "cobalt" + kSbFileSepString +
-                       "content" + kSbFileSepString + "ssl" + kSbFileSepString +
-                       "certs");
+                       "content" + kSbFileSepString +
+#else
+  cert_location.append(std::string(kSbFileSepString) +
+#endif
+                       "ssl" + kSbFileSepString + "certs");
 
   struct stat info;
   ASSERT_TRUE(stat(cert_location.c_str(), &info) == 0) << cert_location;
