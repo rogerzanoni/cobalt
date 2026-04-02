@@ -1329,7 +1329,7 @@ component("net") {
     }
   }
 
-  if (is_cobalt_hermetic_build) {
+  if (is_linux && is_cobalt_hermetic_build) {
     sources -= [
       "base/network_change_notifier_linux.cc",
       "base/network_change_notifier_linux.h",
