@@ -4202,7 +4202,10 @@ if (current_toolchain == jni_zero_toolchain) {
 }
 
 copy("build_date") {
-  sources = [ "$root_build_dir/gen/copied_base/base/generated_build_date_internal.h" ]
+  _jni_zero_gen_dir = get_label_info(
+          ":build_date_internal($jni_zero_toolchain)",
+          "target_gen_dir")
+  sources = [ "$_jni_zero_gen_dir/generated_build_date_internal.h" ]
   outputs = [ _build_date_header ]
   deps = [ ":build_date_internal($jni_zero_toolchain)" ]
 }
