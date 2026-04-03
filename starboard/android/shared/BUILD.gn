@@ -314,7 +314,7 @@ static_library("starboard_platform") {
     ":starboard_base_symbolize",
     "//cobalt/android:jni_headers",
     "//cobalt/browser:cobalt_crash_annotations",
-    "//cobalt/browser/client_hint_headers",
+    "//cobalt/browser/client_hint_headers:client_hint_headers_provider",
     "//cobalt/browser/h5vcc_accessibility:manager",
     "//cobalt/browser/h5vcc_runtime:deep_link_manager",
     "//starboard/common",

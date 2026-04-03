@@ -1,7 +1,14 @@
-source_set("client_hint_headers") {
+source_set("client_hint_headers_provider") {
   sources = [
     "cobalt_header_value_provider.cc",
     "cobalt_header_value_provider.h",
+  ]
+
+  deps = [ "//base" ]
+}
+
+source_set("client_hint_headers") {
+  sources = [
     "cobalt_trusted_header_client.cc",
     "cobalt_trusted_header_client.h",
     "cobalt_trusted_url_loader_header_client.cc",
@@ -9,10 +16,14 @@ source_set("client_hint_headers") {
   ]
 
   deps = [
+    ":client_hint_headers_provider",
     "//mojo/public/cpp/bindings",
     "//net:net",
     "//services/network/public/mojom",
   ]
 
-  public_deps = [ "//services/network/public/mojom" ]
+  public_deps = [
+    ":client_hint_headers_provider",
+    "//services/network/public/mojom",
+  ]
 }
