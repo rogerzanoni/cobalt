@@ -73,3 +73,8 @@ webnn_use_tflite = false
 
 # Disable dav1d in webrtc to reduce binary size (~533KB)
 rtc_include_dav1d_in_internal_decoder_factory = false
+
+# Disable P2P to prevent the dependency chain that pulls
+# poison_environment_construction and causes gn assertions
+# (asset_no_deps) in //build/config/BUILDCONFIG.gn
+is_p2p_enabled = false
