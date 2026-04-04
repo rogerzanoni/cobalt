@@ -10,6 +10,7 @@ import("//build/config/features.gni")
 import("//build/config/ui.gni")
 import("//build/nocompile.gni")
 import("//media/media_options.gni")
+import("//services/network/public/cpp/features.gni")
 import("//testing/libfuzzer/fuzzer_test.gni")
 import("//testing/test.gni")
 import("//third_party/blink/public/public_features.gni")
@@ -1786,6 +1787,14 @@ component("platform") {
     "//ui/gfx",
     "//ui/native_theme/features",
   ]
+
+  if (!is_p2p_enabled) {
+    # disabling is_p2p_enabled removes the dependency chain
+    # (mojom -> cpp_p2p -> webrtc_component) that blink used
+    # to access webrtc headers.
+    public_deps += [ "//third_party/webrtc_overrides:webrtc_component" ]
+  }
+
   deps = [
     "//base:base_static",
     "//base/allocator:buildflags",
@@ -1836,7 +1845,6 @@ component("platform") {
     "//third_party/libyuv",
     "//third_party/one_euro_filter",
     "//third_party/snappy:snappy",
-    "//third_party/webrtc_overrides:webrtc_component",
     "//third_party/zlib/google:compression_utils",
     "//ui/base/cursor/mojom:cursor_type_blink",
     "//ui/base/prediction",
