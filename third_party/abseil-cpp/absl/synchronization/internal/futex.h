@@ -22,12 +22,13 @@
 #include <unistd.h>
 #endif
 
-#if !BUILDFLAG(IS_COBALT_HERMETIC_BUILD)
+// Bionic needs these headers, exclude them only for musl-based builds
+#if !BUILDFLAG(IS_COBALT_HERMETIC_BUILD) || defined(__BIONIC__)
 #ifdef __linux__
 #include <linux/futex.h>
 #include <sys/syscall.h>
 #endif
-#endif // !BUILDFLAG(IS_COBALT_HERMETIC_BUILD)
+#endif // !BUILDFLAG(IS_COBALT_HERMETIC_BUILD) || defined(__BIONIC__)
 
 #include <errno.h>
 #include <stdio.h>
