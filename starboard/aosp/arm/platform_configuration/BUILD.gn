@@ -14,4 +14,16 @@
 
 config("platform_configuration") {
   configs = [ "//starboard/android/shared/platform_configuration" ]
+
+  cflags = [
+    "-Wno-implicit-fallthrough",
+    "-Wno-sign-compare",
+    "-Wno-tautological-pointer-compare",
+    "-Wno-shorten-64-to-32",
+    "-Wno-sometimes-uninitialized",
+    "-Wno-missing-braces",
+    "-Wno-deprecated",
+    "-Wno-vla-cxx-extension",
+    "-Wno-return-type",
+  ]
 }
