@@ -501,7 +501,7 @@ int evergreen_dl_iterate_phdr(
     struct dl_phdr_info info;
     info.dlpi_addr =  evergreen_info.base_address;
     info.dlpi_name = evergreen_info.file_path_buf;
-    info.dlpi_phdr = reinterpret_cast<Elf_Phdr*>(evergreen_info.phdr_table);
+    info.dlpi_phdr = reinterpret_cast<const ElfW(Phdr)*>(static_cast<uintptr_t>(evergreen_info.phdr_table));
     info.dlpi_phnum = evergreen_info.phdr_table_num;
     ret = callback(&info, sizeof(info), data);
   }
