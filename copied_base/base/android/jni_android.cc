@@ -47,6 +47,9 @@ bool g_fatal_exception_occurred = false;
 const char* COBALT_ORG_CHROMIUM = "cobalt/org/chromium";
 const char* ORG_CHROMIUM = "org/chromium";
 
+bool g_add_cobalt_prefix = false;
+std::atomic<bool> g_checked_command_line(false);
+
 std::string getRepackagedName(const char* signature) {
   std::string holder(signature);
   size_t pos = 0;
