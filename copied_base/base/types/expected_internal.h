@@ -49,10 +49,11 @@ template <typename E>
 struct IsUnexpected<unexpected<E>> : std::true_type {};
 
 template <typename T>
-struct IsExpected : std::false_type {};
-
+inline constexpr bool UnderlyingIsExpected = false;
 template <typename T, typename E>
-struct IsExpected<expected<T, E>> : std::true_type {};
+inline constexpr bool UnderlyingIsExpected<expected<T, E>> = true;
+template <typename T>
+inline constexpr bool IsExpected = UnderlyingIsExpected<remove_cvref_t<T>>;
 
 template <typename T, typename U>
 struct IsConstructibleOrConvertible
@@ -359,7 +360,7 @@ constexpr auto AndThen(Exp&& exp, F&& f) noexcept {
   };
 
   using U = remove_cvref_t<decltype(invoke_f())>;
-  static_assert(internal::IsExpected<U>::value,
+  static_assert(internal::IsExpected<U>,
                 "expected<T, E>::and_then: Result of f() must be a "
                 "specialization of expected");
   static_assert(
@@ -376,7 +377,7 @@ constexpr auto OrElse(Exp&& exp, F&& f) noexcept {
   using G = remove_cvref_t<
       std::invoke_result_t<F, decltype(std::forward<Exp>(exp).error())>>;
 
-  static_assert(internal::IsExpected<G>::value,
+  static_assert(internal::IsExpected<G>,
                 "expected<T, E>::or_else: Result of f() must be a "
                 "specialization of expected");
   static_assert(
