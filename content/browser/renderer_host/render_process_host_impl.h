@@ -66,7 +66,6 @@
 #include "mojo/public/cpp/system/invitation.h"
 #include "net/base/network_isolation_key.h"
 #include "ppapi/buildflags/buildflags.h"
-#include "services/network/public/mojom/p2p.mojom-forward.h"
 #include "services/network/public/mojom/url_loader_factory.mojom-forward.h"
 #include "services/resource_coordinator/public/mojom/memory_instrumentation/memory_instrumentation.mojom.h"
 #include "services/service_manager/public/cpp/binder_registry.h"
@@ -105,6 +104,10 @@
 #include "content/browser/child_thread_type_switcher_linux.h"
 #include "media/mojo/mojom/video_encode_accelerator.mojom.h"
 #endif
+
+#if BUILDFLAG(IS_P2P_ENABLED)
+#include "services/network/public/mojom/p2p.mojom-forward.h"
+#endif  // BUILDFLAG(IS_P2P_ENABLED)
 
 namespace base {
 class CommandLine;
@@ -150,7 +153,6 @@ class FramelessMediaInterfaceProxy;
 class InProcessChildThreadParams;
 class IsolationContext;
 class MediaStreamTrackMetricsHost;
-class P2PSocketDispatcherHost;
 class PepperRendererConnection;
 class PermissionServiceContext;
 class PluginRegistryImpl;
@@ -167,6 +169,10 @@ class SiteInstanceImpl;
 enum class ProcessReusePolicy;
 struct ChildProcessTerminationInfo;
 struct GlobalRenderFrameHostId;
+
+#if BUILDFLAG(IS_P2P_ENABLED)
+class P2PSocketDispatcherHost;
+#endif  // BUILDFLAG(IS_P2P_ENABLED)
 
 typedef base::Thread* (*RendererMainThreadFactoryFunction)(
     const InProcessChildThreadParams& params,
@@ -295,10 +301,12 @@ class CONTENT_EXPORT RenderProcessHostImpl
   FilterURLResult FilterURL(bool empty_allowed, GURL* url) override;
   void EnableAudioDebugRecordings(const base::FilePath& file) override;
   void DisableAudioDebugRecordings() override;
+#if BUILDFLAG(IS_P2P_ENABLED)
   WebRtcStopRtpDumpCallback StartRtpDump(
       bool incoming,
       bool outgoing,
       WebRtcRtpPacketCallback packet_callback) override;
+#endif  // BUILDFLAG(IS_P2P_ENABLED)
   void BindReceiver(mojo::GenericPendingReceiver receiver) override;
   std::unique_ptr<base::PersistentMemoryAllocator> TakeMetricsAllocator()
       override;
@@ -365,10 +373,12 @@ class CONTENT_EXPORT RenderProcessHostImpl
   void SetBatterySaverMode(bool battery_saver_mode_enabled) override;
   uint64_t GetPrivateMemoryFootprint() override;
 
+#if BUILDFLAG(IS_P2P_ENABLED)
   void PauseSocketManagerForRenderFrameHost(
       const GlobalRenderFrameHostId& render_frame_host_id) override;
   void ResumeSocketManagerForRenderFrameHost(
       const GlobalRenderFrameHostId& render_frame_host_id) override;
+#endif  // BUILDFLAG(IS_P2P_ENABLED)
 
   // IPC::Sender via RenderProcessHost.
   bool Send(IPC::Message* msg) override;
@@ -848,10 +858,12 @@ class CONTENT_EXPORT RenderProcessHostImpl
       mojo::PendingReceiver<media::mojom::VideoDecoder> receiver) override;
 #endif  // BUILDFLAG(ALLOW_OOP_VIDEO_DECODER)
 
+#if BUILDFLAG(IS_P2P_ENABLED)
   void BindP2PSocketManager(
       net::NetworkAnonymizationKey isolation_key,
       mojo::PendingReceiver<network::mojom::P2PSocketManager> receiver,
       GlobalRenderFrameHostId render_frame_host_id);
+#endif  // BUILDFLAG(IS_P2P_ENABLED)
 
   using IpcSendWatcher = base::RepeatingCallback<void(const IPC::Message& msg)>;
   void SetIpcSendWatcherForTesting(IpcSendWatcher watcher) {
@@ -1418,7 +1430,9 @@ class CONTENT_EXPORT RenderProcessHostImpl
   // and calling through RenderProcessHostObserver::RenderProcessExited.
   bool within_process_died_observer_ = false;
 
+#if BUILDFLAG(IS_P2P_ENABLED)
   std::unique_ptr<P2PSocketDispatcherHost> p2p_socket_dispatcher_host_;
+#endif  // BUILDFLAG(IS_P2P_ENABLED)
 
   // Must be accessed on UI thread.
   AecDumpManagerImpl aec_dump_manager_;

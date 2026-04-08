@@ -10,6 +10,7 @@ import("//ipc/features.gni")
 import("//media/media_options.gni")
 import("//mojo/public/tools/bindings/mojom.gni")
 import("//ppapi/buildflags/buildflags.gni")
+import("//services/network/public/cpp/features.gni")
 import("//sandbox/features.gni")
 import("//testing/libfuzzer/fuzzer_test.gni")
 import("//tools/ipc_fuzzer/ipc_fuzzer.gni")
@@ -607,8 +608,10 @@ mojom("mojo_bindings") {
       traits_private_headers = [
         "//content/common/content_param_traits_macros.h",
         "//content/public/common/common_param_traits.h",
-        "//services/network/public/cpp/p2p_param_traits.h",
       ]
+      if (is_p2p_enabled) {
+        traits_private_headers += [ "//services/network/public/cpp/p2p_param_traits.h" ]
+      }
 
       traits_sources = [
         "//content/common/frame_owner_element_type_mojom_traits.cc",
