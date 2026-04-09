@@ -67,7 +67,7 @@ bool FillUnixAddress(const std::string& socket_path,
   // have '\0' characters embedded (although we don't support this).
   // Note that addr.sun_path is already zero initialized.
   UNSAFE_TODO(memcpy(socket_addr->sun_path + 1, socket_path.c_str(),
-                     socket_path.size());)
+                     socket_path.size()));
   return true;
 #else
   return false;
