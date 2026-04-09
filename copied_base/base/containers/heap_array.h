@@ -18,7 +18,6 @@
 namespace base {
 
 #if BUILDFLAG(IS_COBALT)
-#define UNSAFE_BUFFER_USAGE
 #define LIFETIME_BOUND
 #endif
 
