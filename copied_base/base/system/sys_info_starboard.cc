@@ -30,7 +30,7 @@ using starboard::GetSystemPropertyString;
 #include "base/containers/contains.h"
 #endif  // BUILDFLAG(IS_ANDROID)
 
-#if BUILDFLAG(IS_STARBOARD)
+#if BUILDFLAG(IS_STARBOARD) && !BUILDFLAG(IS_ANDROID)
 namespace base {
 std::string SysInfo::HardwareModelName() {
   return GetSystemPropertyString(kSbSystemPropertyModelName);
