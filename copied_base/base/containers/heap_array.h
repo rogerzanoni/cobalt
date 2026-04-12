@@ -17,11 +17,7 @@
 
 namespace base {
 
-#if BUILDFLAG(IS_COBALT)
-#define LIFETIME_BOUND
-#endif
-
-// HeapArray<T> is a replacement for std::unique_ptr<T[]> that keeps track
+#// HeapArray<T> is a replacement for std::unique_ptr<T[]> that keeps track
 // of its size. It is intended to provide easy conversion to span<T> for most
 // usage, but it also provides bounds-checked indexing.
 //

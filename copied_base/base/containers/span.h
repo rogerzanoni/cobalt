@@ -21,6 +21,15 @@
 #include "base/cxx20_to_address.h"
 #include "base/numerics/safe_math.h"
 
+// Allows global use of a type for conversion to byte spans.
+template <typename T>
+inline constexpr bool kCanSafelyConvertToByteSpan =
+    std::has_unique_object_representations_v<T>;
+template <typename T, typename U>
+inline constexpr bool kCanSafelyConvertToByteSpan<std::pair<T, U>> =
+    kCanSafelyConvertToByteSpan<std::remove_cvref_t<T>> &&
+    kCanSafelyConvertToByteSpan<std::remove_cvref_t<U>>;
+
 namespace base {
 
 // [views.constants]
@@ -29,7 +38,52 @@ constexpr size_t dynamic_extent = std::numeric_limits<size_t>::max();
 template <typename T, size_t Extent = dynamic_extent>
 class span;
 
+// Type tag to provide to byte span conversion functions to bypass
+// `std::has_unique_object_representations_v<>` check.
+struct allow_nonunique_obj_t {
+  explicit allow_nonunique_obj_t() = default;
+};
+inline constexpr allow_nonunique_obj_t allow_nonunique_obj{};
+
 namespace internal {
+
+// Akin to `std::constructible_from<span, T>`, but meant to be used in a
+// type-deducing context where we don't know what args would be deduced;
+// `std::constructible_from` can't be directly used in such a case since the
+// type parameters must be fully-specified (e.g. `span<int>`), requiring us to
+// have that knowledge already.
+template <typename T>
+concept SpanConstructibleFrom = requires(T&& t) { span(std::forward<T>(t)); };
+
+// Returns the element type of `span(T)`.
+template <typename T>
+  requires SpanConstructibleFrom<T>
+using ElementTypeOfSpanConstructedFrom =
+    typename decltype(span(std::declval<T>()))::element_type;
+
+template <typename T>
+concept CanSafelyConvertToByteSpan =
+    kCanSafelyConvertToByteSpan<std::remove_cvref_t<T>>;
+
+template <typename T>
+concept ByteSpanConstructibleFrom =
+    SpanConstructibleFrom<T> &&
+    CanSafelyConvertToByteSpan<ElementTypeOfSpanConstructedFrom<T>>;
+
+// Allows one-off use of a type that wouldn't normally convert to a byte span.
+template <typename T>
+concept CanSafelyConvertNonUniqueToByteSpan =
+    // Non-trivially-copyable elements usually aren't safe even to serialize;
+    // when they are that's normally unconditionally true and can be handled
+    // using `kCanSafelyConvertToByteSpan`.
+    std::is_trivially_copyable_v<T> &&
+    // If this fails, `allow_nonunique_obj` wasn't necessary.
+    !std::has_unique_object_representations_v<T>;
+
+template <typename T>
+concept ByteSpanConstructibleFromNonUnique =
+    SpanConstructibleFrom<T> &&
+    CanSafelyConvertNonUniqueToByteSpan<ElementTypeOfSpanConstructedFrom<T>>;
 
 template <size_t I>
 using size_constant = std::integral_constant<size_t, I>;
@@ -406,6 +460,47 @@ class GSL_POINTER span : public internal::ExtentStorage<Extent> {
     return {data() + offset, count != dynamic_extent ? count : size() - offset};
   }
 
+  // Copies the elements from `other` into this span, performing bounds CHECKs
+  // to ensure the spans are the same size.
+  constexpr void copy_from(span<const T> other)
+    requires(!std::is_const_v<T>)
+  {
+    CHECK(size() == other.size());
+    // SAFETY: Both spans have the same size and do not overlap (the caller
+    // guarantees this is safe).
+    auto* out = data();
+    auto* in = other.data();
+    for (size_t i = 0; i < size(); ++i) {
+      out[i] = in[i];
+    }
+  }
+
+  // Copies elements from `other` into the front of this span. CHECKs that
+  // `other.size() <= size()`.
+  constexpr void copy_prefix_from(span<const T> other)
+    requires(!std::is_const_v<T>)
+  {
+    CHECK(other.size() <= size());
+    auto* out = data();
+    auto* in = other.data();
+    for (size_t i = 0; i < other.size(); ++i) {
+      out[i] = in[i];
+    }
+  }
+
+  // Copies the elements from `other` into this span, performing bounds CHECKs
+  // to ensure the spans are the same size. The spans must not overlap.
+  constexpr void copy_from_nonoverlapping(span<const T> other)
+    requires(!std::is_const_v<T>)
+  {
+    CHECK(size() == other.size());
+    auto* out = data();
+    auto* in = other.data();
+    for (size_t i = 0; i < size(); ++i) {
+      out[i] = in[i];
+    }
+  }
+
   // [span.obs], span observers
   constexpr size_t size() const noexcept { return ExtentStorage::size(); }
   constexpr size_t size_bytes() const noexcept { return size() * sizeof(T); }
@@ -455,6 +550,47 @@ class GSL_POINTER span : public internal::ExtentStorage<Extent> {
   T* data_;
 };
 
+// Converts a `T&` to a `span<T, 1>`.
+//
+// (Not in `std::`; inspired by Rust's `slice::from_ref()`.)
+template <typename T>
+constexpr auto span_from_ref(const T& t LIFETIME_BOUND) {
+  // SAFETY: It's safe to read the memory at `t`'s address as long as the
+  // provided reference is valid.
+  return UNSAFE_BUFFERS(span<const T, 1>(std::addressof(t), 1u));
+}
+template <typename T>
+constexpr auto span_from_ref(T& t LIFETIME_BOUND) {
+  // SAFETY: It's safe to read the memory at `t`'s address as long as the
+  // provided reference is valid.
+  return UNSAFE_BUFFERS(span<T, 1>(std::addressof(t), 1u));
+}
+
+// Converts a `T&` to a `span<[const] uint8_t, sizeof(T)>`.
+//
+// (Not in `std::`.)
+template <typename T>
+  requires(internal::CanSafelyConvertToByteSpan<T>)
+constexpr auto byte_span_from_ref(const T& t LIFETIME_BOUND) {
+  return as_bytes(span_from_ref(t));
+}
+template <typename T>
+  requires(internal::CanSafelyConvertNonUniqueToByteSpan<T>)
+constexpr auto byte_span_from_ref(allow_nonunique_obj_t,
+                                  const T& t LIFETIME_BOUND) {
+  return as_bytes(allow_nonunique_obj, span_from_ref(t));
+}
+template <typename T>
+  requires(internal::CanSafelyConvertToByteSpan<T>)
+constexpr auto byte_span_from_ref(T& t LIFETIME_BOUND) {
+  return as_writable_bytes(span_from_ref(t));
+}
+template <typename T>
+  requires(internal::CanSafelyConvertNonUniqueToByteSpan<T>)
+constexpr auto byte_span_from_ref(allow_nonunique_obj_t, T& t LIFETIME_BOUND) {
+  return as_writable_bytes(allow_nonunique_obj, span_from_ref(t));
+}
+
 // span<T, Extent>::extent can not be declared inline prior to C++17, hence this
 // definition is required.
 template <class T, size_t Extent>
@@ -474,6 +610,52 @@ span<uint8_t, (X == dynamic_extent ? dynamic_extent : sizeof(T) * X)>
 as_writable_bytes(span<T, X> s) noexcept {
   return {reinterpret_cast<uint8_t*>(s.data()), s.size_bytes()};
 }
+
+template <typename T, size_t X>
+span<const uint8_t, (X == dynamic_extent ? dynamic_extent : sizeof(T) * X)>
+as_bytes(allow_nonunique_obj_t, span<T, X> s) noexcept {
+  return {reinterpret_cast<const uint8_t*>(s.data()), s.size_bytes()};
+}
+
+template <typename T,
+          size_t X,
+          typename = std::enable_if_t<!std::is_const<T>::value>>
+span<uint8_t, (X == dynamic_extent ? dynamic_extent : sizeof(T) * X)>
+as_writable_bytes(allow_nonunique_obj_t, span<T, X> s) noexcept {
+  return {reinterpret_cast<uint8_t*>(s.data()), s.size_bytes()};
+}
+
+// Deduction guides.
+template <typename It,
+          typename EndOrSize,
+          typename = internal::EnableIfCompatibleContiguousIterator<
+              It,
+              std::remove_reference_t<iter_reference_t<It>>>>
+span(It, EndOrSize)
+    -> span<std::remove_reference_t<iter_reference_t<It>>>;
+
+template <typename T, size_t N>
+span(T (&)[N]) -> span<T, N>;
+
+template <typename T, size_t N>
+span(std::array<T, N>&) -> span<T, N>;
+
+template <typename T, size_t N>
+span(const std::array<T, N>&) -> span<const T, N>;
+
+template <
+    typename Container,
+    typename T = std::remove_pointer_t<
+        decltype(std::data(std::declval<Container>()))>,
+    typename = internal::EnableIfSpanCompatibleContainer<Container, T>>
+span(Container&) -> span<T>;
+
+template <
+    typename Container,
+    typename T = std::remove_pointer_t<
+        decltype(std::data(std::declval<const Container&>()))>,
+    typename = internal::EnableIfSpanCompatibleContainer<const Container, T>>
+span(const Container&) -> span<T>;
 
 // Type-deducing helpers for constructing a span.
 template <int&... ExplicitArgumentBarrier, typename It>
@@ -532,6 +714,36 @@ constexpr auto make_span(Container&& container) noexcept {
   using T =
       std::remove_pointer_t<decltype(std::data(std::declval<Container>()))>;
   return span<T, N>(std::data(container), std::size(container));
+}
+
+// as_byte_span() - converts a contiguous container or span to a
+// span<const uint8_t>.
+template <typename T>
+  requires(internal::ByteSpanConstructibleFrom<T>)
+constexpr auto as_byte_span(T&& t) {
+  return as_bytes(span(std::forward<T>(t)));
+}
+
+template <typename T>
+  requires(internal::ByteSpanConstructibleFromNonUnique<T>)
+constexpr auto as_byte_span(allow_nonunique_obj_t, T&& t) {
+  return as_bytes(allow_nonunique_obj, span(std::forward<T>(t)));
+}
+
+// as_writable_byte_span() - converts a contiguous container or span to a
+// span<uint8_t>.
+template <typename T>
+  requires(internal::ByteSpanConstructibleFrom<T> &&
+           !std::is_const_v<internal::ElementTypeOfSpanConstructedFrom<T>>)
+constexpr auto as_writable_byte_span(T&& t) {
+  return as_writable_bytes(span(std::forward<T>(t)));
+}
+
+template <typename T>
+  requires(internal::ByteSpanConstructibleFromNonUnique<T> &&
+           !std::is_const_v<internal::ElementTypeOfSpanConstructedFrom<T>>)
+constexpr auto as_writable_byte_span(allow_nonunique_obj_t, T&& t) {
+  return as_writable_bytes(allow_nonunique_obj, span(std::forward<T>(t)));
 }
 
 }  // namespace base

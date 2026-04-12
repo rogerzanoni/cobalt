@@ -414,6 +414,42 @@ inline constexpr bool AnalyzerAssumeTrue(bool arg) {
 #define LOGICALLY_CONST
 #endif
 
+// Annotates a pointer or reference parameter or return value for a member
+// function as having lifetime intertwined with the instance on which the
+// function is called. For parameters, the function is assumed to store the
+// value into the called-on object, so if the referred-to object is later
+// destroyed, the called-on object is also considered to be dangling. For return
+// values, the value is assumed to point into the called-on object, so if that
+// object is destroyed, the returned value is also considered to be dangling.
+// Useful to diagnose some cases of lifetime errors.
+//
+// See also:
+//   https://clang.llvm.org/docs/AttributeReference.html#lifetimebound
+//
+// Usage:
+// ```
+//   struct S {
+//      S(int* p LIFETIME_BOUND);
+//      int* Get() LIFETIME_BOUND;
+//   };
+//   S Func1() {
+//     int i = 0;
+//     // The following return will not compile; diagnosed as returning address
+//     // of a stack object.
+//     return S(&i);
+//   }
+//   int* Func2(int* p) {
+//     // The following return will not compile; diagnosed as returning address
+//     // of a local temporary.
+//     return S(p).Get();
+//   }
+// ```
+#if __has_cpp_attribute(clang::lifetimebound)
+#define LIFETIME_BOUND [[clang::lifetimebound]]
+#else
+#define LIFETIME_BOUND
+#endif
+
 // Annotates a function or class data member indicating it can lead to
 // out-of-bounds accesses (OOB) if given incorrect inputs.
 //
