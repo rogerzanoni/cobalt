@@ -74,6 +74,12 @@ namespace logging {
     }                                \
   }
 
+// The DUMP_WILL_BE_NOTREACHED() macro provides a convenient way to
+// non-fatally dump in official builds if ever hit. See DUMP_WILL_BE_CHECK for
+// suggested usage.
+#define DUMP_WILL_BE_NOTREACHED() \
+  ::logging::NotReachedError::DumpWillBeNotReached()
+
 }  // namespace logging
 
 #endif  // BASE_NOTREACHED_H_

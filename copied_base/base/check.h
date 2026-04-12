@@ -111,6 +111,10 @@ class BASE_EXPORT NotReachedError : public CheckError {
   // discarding log-stream arguments. See base/notreached.h.
   NOMERGE NOINLINE NOT_TAIL_CALLED static void TriggerNotReached();
 
+  static NotReachedError DumpWillBeNotReached(
+      const base::Location& location =
+          base::Location::CurrentWithoutFunctionName());
+
   // TODO(crbug.com/851128): Mark [[noreturn]] once this is CHECK-fatal on all
   // builds.
   NOMERGE NOINLINE NOT_TAIL_CALLED ~NotReachedError();

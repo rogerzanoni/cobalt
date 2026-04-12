@@ -216,6 +216,15 @@ NotReachedError NotReachedError::NotReached(const base::Location& location) {
   return NotReachedError(log_message);
 }
 
+NotReachedError NotReachedError::DumpWillBeNotReached(
+    const base::Location& location) {
+  auto* const log_message = new NotReachedLogMessage(
+      location, GetDumpSeverity(),
+      base::NotFatalUntil::NoSpecifiedMilestoneInternal);
+  log_message->stream() << "NOTREACHED hit. ";
+  return NotReachedError(log_message);
+}
+
 void NotReachedError::TriggerNotReached() {
   // This triggers a NOTREACHED() error as the returned NotReachedError goes out
   // of scope.
