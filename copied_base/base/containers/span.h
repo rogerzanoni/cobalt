@@ -11,6 +11,7 @@
 #include <array>
 #include <iterator>
 #include <limits>
+#include <string_view>
 #include <type_traits>
 #include <utility>
 
@@ -744,6 +745,24 @@ template <typename T>
            !std::is_const_v<internal::ElementTypeOfSpanConstructedFrom<T>>)
 constexpr auto as_writable_byte_span(allow_nonunique_obj_t, T&& t) {
   return as_writable_bytes(allow_nonunique_obj, span(std::forward<T>(t)));
+}
+
+// as_chars() - reinterprets a byte span as a span of chars.
+inline span<const char> as_chars(span<const uint8_t> s) noexcept {
+  return {reinterpret_cast<const char*>(s.data()), s.size()};
+}
+
+inline span<char> as_writable_chars(span<uint8_t> s) noexcept {
+  return {reinterpret_cast<char*>(s.data()), s.size()};
+}
+
+// as_string_view() - converts a span of chars to a string_view.
+constexpr std::string_view as_string_view(span<const char> s) {
+  return std::string_view(s.data(), s.size());
+}
+
+inline std::string_view as_string_view(span<const unsigned char> s) {
+  return as_string_view(as_chars(s));
 }
 
 }  // namespace base
