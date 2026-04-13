@@ -124,5 +124,95 @@ class SequenceLocalStorageSlot {
   const int slot_id_;
 };
 
+// Generic implementation for SequenceLocalStorageSlot.
+template <typename T, typename Deleter = std::default_delete<T>>
+class GenericSequenceLocalStorageSlot {
+ public:
+  GenericSequenceLocalStorageSlot()
+      : slot_id_(internal::GetNextSequenceLocalStorageSlotNumber()) {}
+
+  GenericSequenceLocalStorageSlot(const GenericSequenceLocalStorageSlot&) =
+      delete;
+  GenericSequenceLocalStorageSlot& operator=(
+      const GenericSequenceLocalStorageSlot&) = delete;
+
+  ~GenericSequenceLocalStorageSlot() = default;
+
+  explicit operator bool() const {
+    return internal::SequenceLocalStorageMap::GetForCurrentThread().Has(
+        slot_id_);
+  }
+
+  // Default-constructs the value for the current sequence if not
+  // already constructed. Then, returns the value.
+  T& GetOrCreateValue() {
+    auto* slot =
+        internal::SequenceLocalStorageMap::GetForCurrentThread().Get(slot_id_);
+    if (!slot) {
+      return emplace();
+    }
+    return slot->external_value.value_as<T>();
+  }
+
+  // Returns a pointer to the value for the current sequence. May be
+  // nullptr if the value was not constructed on the current sequence.
+  T* GetValuePointer() {
+    auto* value =
+        internal::SequenceLocalStorageMap::GetForCurrentThread().Get(slot_id_);
+    if (value) {
+      return std::addressof(value->external_value.value_as<T>());
+    }
+    return nullptr;
+  }
+  const T* GetValuePointer() const {
+    return const_cast<GenericSequenceLocalStorageSlot*>(this)
+        ->GetValuePointer();
+  }
+
+  T* operator->() { return GetValuePointer(); }
+  const T* operator->() const { return GetValuePointer(); }
+
+  T& operator*() { return *GetValuePointer(); }
+  const T& operator*() const { return *GetValuePointer(); }
+
+  void reset() {
+    internal::SequenceLocalStorageMap::GetForCurrentThread().Reset(slot_id_);
+  }
+
+  // Constructs this slot's sequence-local value with |args...| and returns a
+  // pointer to the created object.
+  template <class... Args>
+  T& emplace(Args&&... args) {
+    T* value_ptr = new T(std::forward<Args>(args)...);
+    Adopt(value_ptr);
+    return *value_ptr;
+  }
+
+ private:
+  // Takes ownership of |value_ptr|.
+  void Adopt(T* value_ptr) {
+    // Since SequenceLocalStorageMap needs to store values of various types
+    // within the same map, the type of value_destructor_pair.value is void*
+    // (std::unique_ptr<void> is invalid). Memory is freed by calling
+    // |value_destructor_pair.destructor| in the destructor of
+    // ValueDestructorPair which is invoked when the value is overwritten by
+    // another call to SequenceLocalStorageMap::Set or when the
+    // SequenceLocalStorageMap is deleted.
+    internal::SequenceLocalStorageMap::ExternalValue value;
+    value.emplace(value_ptr);
+    internal::SequenceLocalStorageMap::ValueDestructorPair
+        value_destructor_pair(
+            std::move(value),
+            internal::SequenceLocalStorageMap::MakeExternalDestructor<
+                T, Deleter>());
+
+    internal::SequenceLocalStorageMap::GetForCurrentThread().Set(
+        slot_id_, std::move(value_destructor_pair));
+  }
+
+  // |slot_id_| is used as a key in SequenceLocalStorageMap
+  const int slot_id_;
+};
+
 }  // namespace base
 #endif  // BASE_THREADING_SEQUENCE_LOCAL_STORAGE_SLOT_H_
