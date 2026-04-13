@@ -13,6 +13,7 @@
 #include "base/debug/debugging_buildflags.h"
 #include "base/immediate_crash.h"
 #include "base/location.h"
+#include "base/not_fatal_until.h"
 
 // This header defines the CHECK, DCHECK, and DPCHECK macros.
 //

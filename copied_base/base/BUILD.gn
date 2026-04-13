@@ -527,6 +527,7 @@ component("base") {
     "metrics/user_metrics.h",
     "metrics/user_metrics_action.h",
     "no_destructor.h",
+    "not_fatal_until.h",
     "notreached.h",
     "observer_list.h",
     "observer_list_internal.cc",

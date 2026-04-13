@@ -20,6 +20,17 @@ namespace logging {
 
 namespace {
 
+LogSeverity GetDumpSeverity() {
+#if defined(OFFICIAL_BUILD)
+  return DCHECK_IS_ON() ? LOGGING_DCHECK : LOGGING_ERROR;
+#else
+  // Crash outside official builds (outside user-facing builds) to detect
+  // invariant violations early in release-build testing like fuzzing, etc.
+  // These should eventually be migrated to fatal CHECKs.
+  return LOGGING_FATAL;
+#endif
+}
+
 void DumpWithoutCrashing(LogMessage* log_message,
                          const base::Location& location) {
   // Copy the LogMessage message to stack memory to make sure it can be
