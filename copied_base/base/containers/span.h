@@ -645,18 +645,10 @@ template <typename T, size_t N>
 span(const std::array<T, N>&) -> span<const T, N>;
 
 template <
-    typename Container,
+    typename R,
     typename T = std::remove_pointer_t<
-        decltype(std::data(std::declval<Container>()))>,
-    typename = internal::EnableIfSpanCompatibleContainer<Container, T>>
-span(Container&) -> span<T>;
-
-template <
-    typename Container,
-    typename T = std::remove_pointer_t<
-        decltype(std::data(std::declval<const Container&>()))>,
-    typename = internal::EnableIfSpanCompatibleContainer<const Container, T>>
-span(const Container&) -> span<T>;
+        decltype(std::data(std::declval<R&>()))>>
+span(R&&) -> span<T>;
 
 // Type-deducing helpers for constructing a span.
 template <int&... ExplicitArgumentBarrier, typename It>
