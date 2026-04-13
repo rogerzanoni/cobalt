@@ -42,6 +42,15 @@ PlatformSharedMemoryRegion PlatformSharedMemoryRegion::Take(
     Mode mode,
     size_t size,
     const UnguessableToken& guid) {
+  return TakeOrFail(std::move(fd), mode, size, guid).value();
+}
+
+// static
+expected<PlatformSharedMemoryRegion, PlatformSharedMemoryRegion::TakeError>
+PlatformSharedMemoryRegion::TakeOrFail(ScopedFD fd,
+                                       Mode mode,
+                                       size_t size,
+                                       const UnguessableToken& guid) {
   if (!fd.is_valid())
     return {};
 
@@ -51,7 +60,12 @@ PlatformSharedMemoryRegion PlatformSharedMemoryRegion::Take(
   if (size > static_cast<size_t>(std::numeric_limits<int>::max()))
     return {};
 
-  CHECK(CheckPlatformHandlePermissionsCorrespondToMode(fd.get(), mode, size));
+  if (!CheckPlatformHandlePermissionsCorrespondToMode(fd.get(), mode, size)) {
+    bool is_read_only_mode = (mode == Mode::kReadOnly);
+    return unexpected(is_read_only_mode
+                          ? TakeError::kExpectedReadOnlyButNot
+                          : TakeError::kExpectedWritableButNot);
+  }
 
   return PlatformSharedMemoryRegion(std::move(fd), mode, size, guid);
 }

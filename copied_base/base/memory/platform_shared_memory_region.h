@@ -10,6 +10,7 @@
 #include "base/gtest_prod_util.h"
 #include "base/memory/platform_shared_memory_handle.h"
 #include "base/memory/shared_memory_mapper.h"
+#include "base/types/expected.h"
 #include "base/unguessable_token.h"
 #include "build/build_config.h"
 #include "third_party/abseil-cpp/absl/types/optional.h"
@@ -107,6 +108,28 @@ class BASE_EXPORT PlatformSharedMemoryRegion {
   // and MapAt() is guaranteed to have.
   enum { kMapMinimumAlignment = 32 };
 
+  // Errors that can occur during permission and mode consistency checks that
+  // are performed when adopting native platform handles with `Take()` or
+  // `TakeOrFail()`.
+  enum class TakeError {
+    kExpectedReadOnlyButNot,
+    kExpectedWritableButNot,
+#if BUILDFLAG(IS_ANDROID)
+    kFailedToGetAshmemRegionProtectionMask,
+#endif
+#if BUILDFLAG(IS_APPLE)
+    kVmMapFailed,
+#endif
+#if BUILDFLAG(IS_FUCHSIA)
+    kNotVmo,
+#endif
+#if BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_LINUX)
+    kFcntlFailed,
+    kReadOnlyFdNotReadOnly,
+    kUnexpectedReadOnlyFd,
+#endif
+  };
+
   // Creates a new PlatformSharedMemoryRegion with corresponding mode and size.
   // Creating in kReadOnly mode isn't supported because then there will be no
   // way to modify memory content.
@@ -124,6 +147,7 @@ class BASE_EXPORT PlatformSharedMemoryRegion {
       Mode mode,
       size_t size,
       const UnguessableToken& guid);
+
 #if BUILDFLAG(IS_POSIX) && !BUILDFLAG(IS_ANDROID) && !BUILDFLAG(IS_APPLE)
   // Specialized version of Take() for POSIX that takes only one file descriptor
   // instead of pair. Cannot be used with kWritable |mode|.
@@ -132,6 +156,15 @@ class BASE_EXPORT PlatformSharedMemoryRegion {
                                          size_t size,
                                          const UnguessableToken& guid);
 #endif
+
+  // Similar to `Take()` but relaxes the permission and mode consistency checks
+  // to return an error instead. Useful when deserializing a handle from an
+  // untrustworthy process.
+  static expected<PlatformSharedMemoryRegion, TakeError> TakeOrFail(
+      ScopedPlatformSharedMemoryHandle handle,
+      Mode mode,
+      size_t size,
+      const UnguessableToken& guid);
 
   // Default constructor initializes an invalid instance, i.e. an instance that
   // doesn't wrap any valid platform handle.
