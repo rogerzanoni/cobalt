@@ -99,6 +99,17 @@ void File::Initialize(const FilePath& path, uint32_t flags) {
 }
 #endif
 
+std::optional<size_t> File::Read(int64_t offset, span<uint8_t> data) {
+  span<char> chars = base::as_writable_chars(data);
+  int size = checked_cast<int>(chars.size());
+  // SAFETY: `chars.size()` describes valid portion of `chars.data()`.
+  int result = UNSAFE_BUFFERS(Read(offset, chars.data(), size));
+  if (result < 0) {
+    return std::nullopt;
+  }
+  return checked_cast<size_t>(result);
+}
+
 bool File::ReadAndCheck(int64_t offset, span<uint8_t> data) {
   int size = checked_cast<int>(data.size());
   return Read(offset, reinterpret_cast<char*>(data.data()), size) == size;

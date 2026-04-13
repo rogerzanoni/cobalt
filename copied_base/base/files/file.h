@@ -217,6 +217,7 @@ class BASE_EXPORT File {
   // normal expectation is that actually |size| bytes are read unless there is
   // an error.
   int Read(int64_t offset, char* data, int size);
+  std::optional<size_t> Read(int64_t offset, base::span<uint8_t> data);
 
   // Same as above but without seek.
   int ReadAtCurrentPos(char* data, int size);
