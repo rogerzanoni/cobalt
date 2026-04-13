@@ -12,6 +12,7 @@
 #include <string>
 
 #include "base/base_export.h"
+#include "base/containers/span.h"
 #include "base/compiler_specific.h"
 #include "base/gtest_prod_util.h"
 #include "build/build_config.h"
@@ -73,6 +74,11 @@ BASE_EXPORT float BitsToOpenEndedUnitIntervalF(uint64_t bits);
 // random number source, code outside of base/ that relies on this should use
 // crypto::RandBytes instead to ensure the requirement is easily discoverable.
 BASE_EXPORT void RandBytes(void* output, size_t output_length);
+
+// Fills |buffer| with random data. Thread-safe.
+inline void RandBytes(span<uint8_t> buffer) {
+  RandBytes(buffer.data(), buffer.size());
+}
 
 // Fills a string of length |length| with random data and returns it.
 // |length| should be nonzero. Thread-safe.
