@@ -195,6 +195,8 @@ class BASE_EXPORT MetricsSubSampler {
   InsecureRandomGenerator generator_;
 };
 
+BASE_EXPORT bool ShouldRecordSubsampledMetric(double probability);
+
 }  // namespace base
 
 #endif  // BASE_RAND_UTIL_H_
