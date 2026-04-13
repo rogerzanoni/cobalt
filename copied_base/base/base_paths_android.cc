@@ -5,6 +5,8 @@
 // Defines base::PathProviderAndroid which replaces base::PathProviderPosix for
 // Android in base/path_service.cc.
 
+#include "base/base_paths_android.h"
+
 #include <limits.h>
 #include <unistd.h>
 
