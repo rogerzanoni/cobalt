@@ -20,6 +20,8 @@
 
 #include <__libunwind_config.h>
 
+#include "build/build_config.h"
+
 // Platform specific configuration defines.
 #ifdef __APPLE__
   #if defined(FOR_DYLD)
@@ -39,7 +41,7 @@
     #define _LIBUNWIND_SUPPORT_DWARF_UNWIND 1
     #define _LIBUNWIND_SUPPORT_DWARF_INDEX 1
   #endif
-#elif defined(__BIONIC__) && defined(_LIBUNWIND_ARM_EHABI)
+#elif defined(__BIONIC__) && defined(_LIBUNWIND_ARM_EHABI) && !BUILDFLAG(USE_EVERGREEN)
   // For ARM EHABI, Bionic didn't implement dl_iterate_phdr until API 21. After
   // API 21, dl_iterate_phdr exists, but dl_unwind_find_exidx is much faster.
   #define _LIBUNWIND_USE_DL_UNWIND_FIND_EXIDX 1
