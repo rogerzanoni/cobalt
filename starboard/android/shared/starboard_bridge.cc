@@ -50,6 +50,7 @@ using jni_zero::ScopedJavaGlobalRef;
 using jni_zero::ScopedJavaLocalRef;
 
 // Client Hint Header name constants
+#if !BUILDFLAG(IS_PARTNER_TOOLCHAIN)
 constexpr char kAndroidOSExperienceHeader[] =
     "Sec-CH-UA-Co-Android-OS-Experience";
 constexpr char kPlayServicesVersionHeader[] =
@@ -58,6 +59,7 @@ constexpr char kBuildFingerprintHeader[] =
     "Sec-CH-UA-Co-Android-Build-Fingerprint";
 constexpr char kYoutubeCertScopeHeader[] =
     "Sec-CH-UA-Co-Youtube-Certification-Scope";
+#endif  // !BUILDFLAG(IS_PARTNER_TOOLCHAIN)
 
 // Global pointer to hold the single instance of ApplicationAndroid.
 ApplicationAndroid* g_native_app_instance = nullptr;
