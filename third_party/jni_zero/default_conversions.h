@@ -14,6 +14,8 @@
 
 namespace jni_zero {
 
+#ifdef JNI_ZERO_ENABLE_TYPE_CONVERSIONS
+
 // Allow conversions using std::optional by wrapping non-optional conversions.
 template <internal::IsOptional T>
 inline T FromJniType(JNIEnv* env, const JavaRef<jobject>& j_object) {
@@ -252,6 +254,8 @@ inline ScopedJavaLocalRef<jobject> ToJniType<int64_t>(JNIEnv* env,
                                                       int64_t val) {
   return ToJavaLong(env, val);
 }
+
+#endif  // JNI_ZERO_ENABLE_TYPE_CONVERSIONS
 
 }  // namespace jni_zero
 #endif  // JNI_ZERO_DEFAULT_CONVERSIONS_H_

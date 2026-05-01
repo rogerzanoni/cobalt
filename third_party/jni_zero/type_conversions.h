@@ -14,9 +14,13 @@
 
 #include "third_party/jni_zero/java_refs.h"
 
+#if defined(__cpp_concepts) && __cpp_concepts >= 201907L
 #define JNI_ZERO_ENABLE_TYPE_CONVERSIONS 1
+#endif
 
 namespace jni_zero {
+
+#ifdef JNI_ZERO_ENABLE_TYPE_CONVERSIONS
 
 #define JNI_ZERO_CONVERSION_FAILED_MSG(name)                               \
   "Failed to find a " name                                                 \
@@ -169,6 +173,8 @@ inline T FromJniCollection(JNIEnv* env, const JavaRef<jobject>& obj) {
                 JNI_ZERO_CONVERSION_FAILED_MSG("FromJniCollection"));
 }
 #undef JNI_ZERO_CONVERSION_FAILED_MSG
+
+#endif  // JNI_ZERO_ENABLE_TYPE_CONVERSIONS
 
 }  // namespace jni_zero
 
