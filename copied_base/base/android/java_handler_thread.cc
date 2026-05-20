@@ -36,7 +36,7 @@ JavaHandlerThread::JavaHandlerThread(const char* name,
 
 JavaHandlerThread::JavaHandlerThread(
     const char* name,
-    const base::android::ScopedJavaLocalRef<jobject>& obj)
+    const ScopedJavaLocalRef<jobject>& obj)
     : name_(name), java_thread_(obj) {}
 
 JavaHandlerThread::~JavaHandlerThread() {

@@ -5,7 +5,7 @@
 #ifndef BASE_ANDROID_TASK_SCHEDULER_POST_TASK_ANDROID_H_
 #define BASE_ANDROID_TASK_SCHEDULER_POST_TASK_ANDROID_H_
 
-#include "base/android/jni_weak_ref.h"
+#include "third_party/jni_zero/jni_zero.h"
 #include "base/base_export.h"
 
 namespace base {

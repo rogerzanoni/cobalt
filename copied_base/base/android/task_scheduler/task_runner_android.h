@@ -7,7 +7,7 @@
 
 #include <memory>
 
-#include "base/android/jni_weak_ref.h"
+#include "base/android/scoped_java_ref.h"
 #include "base/android/task_scheduler/task_traits_android.h"
 #include "base/base_export.h"
 #include "base/functional/callback_forward.h"

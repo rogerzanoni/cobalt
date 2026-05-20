@@ -36,7 +36,7 @@ class BASE_EXPORT JavaHandlerThread {
   // |obj| is an instance of JavaHandlerThread.
   explicit JavaHandlerThread(
       const char* name,
-      const base::android::ScopedJavaLocalRef<jobject>& obj);
+      const ScopedJavaLocalRef<jobject>& obj);
   virtual ~JavaHandlerThread();
 
   // Gets the TaskRunner associated with the message loop.

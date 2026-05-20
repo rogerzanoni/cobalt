@@ -21,8 +21,6 @@ template <typename T>
 using ScopedJavaLocalRef = jni_zero::ScopedJavaLocalRef<T>;
 template <typename T>
 using ScopedJavaGlobalRef = jni_zero::ScopedJavaGlobalRef<T>;
-template <typename T>
-using JavaObjectArrayReader = jni_zero::JavaObjectArrayReader<T>;
 
 }  // namespace android
 }  // namespace base
