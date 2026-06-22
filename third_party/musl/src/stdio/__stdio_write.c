@@ -1,8 +1,53 @@
 #include "stdio_impl.h"
 #include <sys/uio.h>
 
+#if defined(STARBOARD)
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+#include "starboard/log.h"
+#endif  // defined(STARBOARD)
+
 size_t __stdio_write(FILE *f, const unsigned char *buf, size_t len)
 {
+#if defined(STARBOARD)
+	// Starboard routes stdout/stderr through SbLogRaw so that platforms
+	// that handle them specially don't miss any output.
+	// limit. Coalesce the buffered bytes and the new data, then emit each
+	// line separatedly to keep long output from hitting the per-entry size.
+	if (f->fd == STDOUT_FILENO || f->fd == STDERR_FILENO) {
+		size_t buffered = f->wpos - f->wbase;
+		size_t total = buffered + len;
+		char *data = malloc(total + 1);
+		if (data) {
+			size_t start = 0, pos;
+			memcpy(data, f->wbase, buffered);
+			memcpy(data + buffered, buf, len);
+			data[total] = '\0';
+			for (pos = 0; pos < total; pos++) {
+				// Keep the '\n': SbLogRaw is raw on some
+				// platforms (no implicit newline).
+				// NUL-terminate just past it, then restore the
+				// byte.
+				if (data[pos] == '\n') {
+					char saved = data[pos + 1];
+					data[pos + 1] = '\0';
+					SbLogRaw(data + start);
+					data[pos + 1] = saved;
+					start = pos + 1;
+				}
+			}
+			if (start < total) {
+				SbLogRaw(data + start);
+			}
+			free(data);
+		}
+		f->wend = f->buf + f->buf_size;
+		f->wpos = f->wbase = f->buf;
+		return len;
+	}
+#endif  // defined(STARBOARD)
 	struct iovec iovs[2] = {
 		{ .iov_base = f->wbase, .iov_len = f->wpos-f->wbase },
 		{ .iov_base = (void *)buf, .iov_len = len }
