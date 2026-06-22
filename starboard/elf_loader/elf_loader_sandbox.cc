@@ -28,6 +28,7 @@
 #include "starboard/elf_loader/evergreen_info.h"
 #include "starboard/elf_loader/sabi_string.h"
 #include "starboard/event.h"
+#include "starboard/shared/starboard/features.h"
 
 elf_loader::ElfLoader g_elf_loader;
 
@@ -47,7 +48,9 @@ void LoadLibraryAndInitialize(const std::string& library_path,
                   << "=path/to/content/relative/to/loader/content.";
     return;
   }
-  if (!g_elf_loader.Load(library_path, content_path, true)) {
+  if (!g_elf_loader.Load(library_path, content_path, /*is_relative_path=*/true,
+                         /*custom_get_extension=*/nullptr,
+                         elf_loader::CompressionType::kLz4)) {
     SB_NOTREACHED() << "Failed to load library at '"
                     << g_elf_loader.GetLibraryPath() << "'.";
     return;
@@ -135,5 +138,13 @@ void SbEventHandle(const SbEvent* event) {
 }
 
 int main(int argc, char** argv) {
+  // TODO(Henrique): https://github.com/youtube/cobalt/pull/11025 created
+  // InitializeStarboardFeatureListWithDefaults but, as per a review comment,
+  // moved it from features.h to features_test_util.h, which is in a testonly
+  // target.
+
+  // The evergreen inner library's static initializers query Starboard
+  // features, so seed the FeatureList with defaults before it is loaded.
+  starboard::features::InitializeStarboardFeatureListWithDefaults();
   return SbRunStarboardMain(argc, argv, SbEventHandle);
 }

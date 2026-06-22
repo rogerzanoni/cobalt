@@ -12,23 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-static_library("starboard_platform") {
-  sources = [ "run_starboard_main.cc" ]
+import("//build/config/android/abi.gni")
+import("//build/config/android/rules.gni")
+import("//build/config/sysroot.gni")
 
-  configs += [ "//starboard/build/config:starboard_implementation" ]
-
-  public_deps = [ "//starboard/android/shared:starboard_platform" ]
+copy("copy_libcpp_shared") {
+  sources = [ "$sysroot/usr/lib/$android_abi_target/libc++_shared.so" ]
+  outputs = [ "$root_build_dir/libc++_shared.so" ]
 }
 
-source_set("aosp_loader_glue") {
-  sources = [
-    "android_main.cc",
-    "starboard_library_loader.cc",
-    "starboard_library_stubs.cc",
-  ]
+android_library("cobalt_apk_java") {
+  resources_package = "dev.cobalt.coat"
 
+  sources = [
+    "apk/app/java/dev/cobalt/app/CobaltApplication.java",
+    "apk/app/java/dev/cobalt/app/MainActivity.java",
+  ]
   deps = [
-    "//base",
-    "//starboard:starboard_group",
+    "//cobalt/android:cobalt_main_java",
   ]
 }
