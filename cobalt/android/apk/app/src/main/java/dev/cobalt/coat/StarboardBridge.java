@@ -36,6 +36,7 @@ import dev.cobalt.media.AudioOutputManager;
 import dev.cobalt.util.DisplayUtil;
 import dev.cobalt.util.Holder;
 import dev.cobalt.util.Log;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -347,7 +348,14 @@ public class StarboardBridge {
    * May be overridden for use cases that need to segregate storage.
    */
   protected String getFilesAbsolutePath() {
-    return mAppContext.getFilesDir().getAbsolutePath();
+    // getAbsolutePath() doesn't resolve symbolic links. nplb tests compare
+    // against resolved paths, so return the canonical path here.
+    try {
+      return mAppContext.getFilesDir().getCanonicalPath();
+    } catch (IOException e) {
+      e.printStackTrace();
+      return mAppContext.getFilesDir().getAbsolutePath();
+    }
   }
 
   /**
@@ -355,7 +363,12 @@ public class StarboardBridge {
    * overridden for use cases that need to segregate storage.
    */
   protected String getCacheAbsolutePath() {
-    return mAppContext.getCacheDir().getAbsolutePath();
+    try {
+      return mAppContext.getCacheDir().getCanonicalPath();
+    } catch (IOException e) {
+      e.printStackTrace();
+      return mAppContext.getCacheDir().getAbsolutePath();
+    }
   }
 
   // TODO: (cobalt b/372559388) remove or migrate JNI?
