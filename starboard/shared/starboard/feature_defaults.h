@@ -12,13 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef STARBOARD_SHARED_STARBOARD_FEATURES_TEST_UTIL_H_
-#define STARBOARD_SHARED_STARBOARD_FEATURES_TEST_UTIL_H_
+#ifndef STARBOARD_SHARED_STARBOARD_FEATURE_DEFAULTS_H_
+#define STARBOARD_SHARED_STARBOARD_FEATURE_DEFAULTS_H_
 
 namespace starboard::features {
 
+// Seeds the Starboard FeatureList singleton with the default state of every
+// feature/param declared in starboard/extension/feature_config.h. Must be
+// called once before any code (e.g. the Evergreen inner library's static
+// initializers) queries a Starboard feature.
 void InitializeStarboardFeatureListWithDefaults();
 
 }  // namespace starboard::features
 
-#endif  // STARBOARD_SHARED_STARBOARD_FEATURES_TEST_UTIL_H_
+#endif  // STARBOARD_SHARED_STARBOARD_FEATURE_DEFAULTS_H_
