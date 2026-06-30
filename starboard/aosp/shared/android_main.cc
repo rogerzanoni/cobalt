@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <jni.h>
+#include <unistd.h>
 
 #include <string>
 #include <vector>
@@ -24,6 +25,11 @@
 
 int main(int argc, char** argv);
 
+namespace starboard {
+// Defined in starboard/android/shared/file_internal.cc
+extern const char* g_app_files_dir;
+}  // namespace starboard
+
 namespace {
 
 class StarboardMainDelegate : public base::PlatformThread::Delegate {
@@ -32,6 +38,17 @@ class StarboardMainDelegate : public base::PlatformThread::Delegate {
     base::PlatformThread::SetName("StarboardMain");
 
     JNIEnv* env = jni_zero::AttachCurrentThread();
+
+    // Android starts the process with the working directory at "/" (read-only)
+    // nplb (and POSIX code) may expect relative paths to be writable, so
+    // cd to the app files dir before startup.
+    if (starboard::g_app_files_dir && *starboard::g_app_files_dir) {
+      if (chdir(starboard::g_app_files_dir) != 0) {
+        SB_LOG(WARNING) << "cobalt_loader: chdir to " << starboard::g_app_files_dir
+                        << " failed";
+      }
+    }
+
     std::vector<std::string> args;
     args.push_back("cobalt_loader");
     starboard::StarboardBridge::GetInstance()->AppendArgs(env, &args);
