@@ -28,12 +28,15 @@ extern "C" {
 struct musl_statvfs {
   unsigned long f_bsize;
   unsigned long f_frsize;
-  fsblkcnt_t f_blocks;
-  fsblkcnt_t f_bfree;
-  fsblkcnt_t f_bavail;
-  fsfilcnt_t f_files;
-  fsfilcnt_t f_ffree;
-  fsfilcnt_t f_favail;
+  // musl's fsblkcnt_t/fsfilcnt_t are 64-bit on every arch but bionic defines
+  // them as 32-bit `unsigned long` on 32-bit targets. Use fixed-width 64-bit
+  // fields so this struct matches musl's layout.
+  uint64_t f_blocks;
+  uint64_t f_bfree;
+  uint64_t f_bavail;
+  uint64_t f_files;
+  uint64_t f_ffree;
+  uint64_t f_favail;
   unsigned long f_fsid;
   unsigned : 8 * (2 * sizeof(int) - sizeof(long));
   unsigned long f_flag;
