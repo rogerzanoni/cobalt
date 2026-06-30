@@ -28,7 +28,7 @@
 #include "starboard/elf_loader/evergreen_info.h"
 #include "starboard/elf_loader/sabi_string.h"
 #include "starboard/event.h"
-#include "starboard/shared/starboard/features.h"
+#include "starboard/shared/starboard/feature_defaults.h"
 
 elf_loader::ElfLoader g_elf_loader;
 
@@ -138,13 +138,6 @@ void SbEventHandle(const SbEvent* event) {
 }
 
 int main(int argc, char** argv) {
-  // TODO(Henrique): https://github.com/youtube/cobalt/pull/11025 created
-  // InitializeStarboardFeatureListWithDefaults but, as per a review comment,
-  // moved it from features.h to features_test_util.h, which is in a testonly
-  // target.
-
-  // The evergreen inner library's static initializers query Starboard
-  // features, so seed the FeatureList with defaults before it is loaded.
   starboard::features::InitializeStarboardFeatureListWithDefaults();
   return SbRunStarboardMain(argc, argv, SbEventHandle);
 }
