@@ -1,0 +1,14 @@
+{
+  "_comment": "AOSP nplb exclusions.",
+  "failing_tests": [
+    "*SbAudioSink*",
+    "*MultiplePlayer*",
+    "*SbPlayer*",
+    "*MaximumPlayerConfigurationExplorer*",
+    "*SbMediaSetAudioWriteDuration*",
+    "*VerticalVideoTest*",
+    "PosixReadlinkTest.InvalidBufferSizeFails",
+    "PosixSignalTest.PauseIsInterruptedBySignal",
+    "PosixThreadAttrTest.StackAddrAndSizeAttr"
+  ]
+}
