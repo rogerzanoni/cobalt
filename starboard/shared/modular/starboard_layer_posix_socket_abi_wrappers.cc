@@ -14,6 +14,7 @@
 
 #include "starboard/shared/modular/starboard_layer_posix_socket_abi_wrappers.h"
 
+#include <errno.h>
 #include <net/if.h>
 #include <stdlib.h>
 #include <string.h>
@@ -421,7 +422,14 @@ SB_EXPORT char* __abi_wrap_if_indextoname(unsigned int ifindex, char* ifname) {
   // ifname buffer is larger than the platform's max interface name length,
   // so it is fine to pass it directly to the platform's if_indextoname.
   if (MUSL_IF_NAMESIZE >= IF_NAMESIZE) {
-    return if_indextoname(ifindex, ifname);
+    char* res = if_indextoname(ifindex, ifname);
+#if defined(__ANDROID__)
+    if (res == nullptr && errno == ENODEV) {
+      // POSIX reports ENXIO for a nonexistent index; bionic reports ENODEV.
+      errno = ENXIO;
+    }
+#endif
+    return res;
   }
 
   // ifname buffer is smaller than the platform's max interface name length. If
@@ -431,6 +439,12 @@ SB_EXPORT char* __abi_wrap_if_indextoname(unsigned int ifindex, char* ifname) {
   char platform_buf[IF_NAMESIZE];
   char* res = if_indextoname(ifindex, platform_buf);
   if (res == nullptr) {
+#if defined(__ANDROID__)
+    // POSIX reports ENXIO for a nonexistent index; bionic reports ENODEV.
+    if (errno == ENODEV) {
+      errno = ENXIO;
+    }
+#endif
     return nullptr;
   }
   starboard::strlcpy(ifname, res, MUSL_IF_NAMESIZE);
