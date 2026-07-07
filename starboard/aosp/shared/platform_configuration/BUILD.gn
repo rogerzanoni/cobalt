@@ -24,6 +24,8 @@ config("platform_configuration") {
       "-Wl,--wrap=close",
       "-Wl,--wrap=fstatat",
       "-Wl,--wrap=if_indextoname",
+      "-Wl,--wrap=link",
+      "-Wl,--wrap=mkostemp",
       "-Wl,--wrap=open",
       "-Wl,--wrap=openat",
       "-Wl,--wrap=stat",
