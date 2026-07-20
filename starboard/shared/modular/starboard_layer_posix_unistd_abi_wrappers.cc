@@ -16,6 +16,7 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <limits.h>
 #include <sys/syscall.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -1039,4 +1040,29 @@ ssize_t __abi_wrap_pwrite(int fd,
                           size_t size,
                           musl_off_t ofs) {
   return pwrite(fd, buf, size, static_cast<off_t>(ofs));
+}
+
+ssize_t __abi_wrap_readlink(const char* path, char* buf, size_t bufsize) {
+#if defined(__ANDROID__)
+  // Passing a bufsize that wraps around size_t triggers a 
+  // FORTIFY arithmetic overflow abort in bionic
+  if (bufsize == 0 || bufsize > SSIZE_MAX) {
+    errno = EINVAL;
+    return -1;
+  }
+#endif  // defined(__ANDROID__)
+  return readlink(path, buf, bufsize);
+}
+
+ssize_t __abi_wrap_readlinkat(int dirfd,
+                              const char* path,
+                              char* buf,
+                              size_t bufsize) {
+#if defined(__ANDROID__)
+  if (bufsize == 0 || bufsize > SSIZE_MAX) {
+    errno = EINVAL;
+    return -1;
+  }
+#endif  // defined(__ANDROID__)
+  return readlinkat(dirfd, path, buf, bufsize);
 }

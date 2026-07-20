@@ -253,6 +253,15 @@ SB_EXPORT ssize_t __abi_wrap_pwrite(int fd,
                                     size_t size,
                                     musl_off_t ofs);
 
+SB_EXPORT ssize_t __abi_wrap_readlink(const char* path,
+                                      char* buf,
+                                      size_t bufsize);
+
+SB_EXPORT ssize_t __abi_wrap_readlinkat(int dirfd,
+                                        const char* path,
+                                        char* buf,
+                                        size_t bufsize);
+
 #ifdef __cplusplus
 }  // extern "C"
 #endif
