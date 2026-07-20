@@ -8,7 +8,6 @@
     "*SbMediaSetAudioWriteDuration*",
     "*VerticalVideoTest*",
     "PosixReadlinkTest.InvalidBufferSizeFails",
-    "PosixSignalTest.PauseIsInterruptedBySignal",
     "PosixThreadAttrTest.StackAddrAndSizeAttr"
   ]
 }
