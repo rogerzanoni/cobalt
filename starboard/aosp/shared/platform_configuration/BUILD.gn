@@ -34,6 +34,7 @@ config("platform_configuration") {
       "-Wl,--wrap=openat",
       "-Wl,--wrap=readdir",
       "-Wl,--wrap=readdir_r",
+      "-Wl,--wrap=readlink",
       "-Wl,--wrap=stat",
     ]
   }
