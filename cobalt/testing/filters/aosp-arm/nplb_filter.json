@@ -7,7 +7,6 @@
     "*MaximumPlayerConfigurationExplorer*",
     "*SbMediaSetAudioWriteDuration*",
     "*VerticalVideoTest*",
-    "PosixReadlinkTest.InvalidBufferSizeFails",
     "PosixThreadAttrTest.StackAddrAndSizeAttr"
   ]
 }
