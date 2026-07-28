@@ -25,28 +25,86 @@ template("modular_apk") {
     _loader = "//starboard/elf_loader:elf_loader_sandbox"
   }
 
+  # Bundle a real, self-contained font set with the cobalt app so
+  # SkFontMgr_Cobalt has actual families. The categories below mirror
+  # the "limited" package in starboard/content/fonts/variables.gni.
+  if (_name == "cobalt") {
+    _font_config = "//starboard/content/fonts/config/common/fonts.xml"
+    _font_files_dir = "//starboard/content/fonts/font_files"
+    _font_categories = [
+      "sans-serif=2",
+      "serif=0",
+      "fcc-captions=0",
+      "fallback-lang-non-cjk=1",
+      "fallback-lang-cjk=0",
+      "fallback-lang-cjk-low-quality=1",
+      "fallback-historic=0",
+      "fallback-color-emoji=0",
+      "fallback-emoji=1",
+      "fallback-symbols=1",
+    ]
+
+    _fonts_xml_target = "${target_name}__fonts_xml"
+    _fonts_xml = "$target_gen_dir/fonts/fonts.xml"
+    action(_fonts_xml_target) {
+      script = "//starboard/content/fonts/scripts/filter_fonts.py"
+      sources = [ _font_config ]
+      outputs = [ _fonts_xml ]
+      args = [
+               "-i",
+               rebase_path(_font_config, root_build_dir),
+               "-o",
+               rebase_path(_fonts_xml, root_build_dir),
+             ] + _font_categories
+    }
+  }
+
   _assets_target = "${target_name}__assets"
   android_assets(_assets_target) {
     forward_variables_from(invoker, [ "testonly" ])
     disable_compression = true
 
-    renaming_sources = [
-      "$root_build_dir/app/${_name}/content/fonts/fonts.xml",
-      "$root_build_dir/app/${_name}/lib/${_lib_name}.lz4",
-    ]
-    renaming_destinations = [
-      "app/cobalt/content/fonts/fonts.xml",
-      "app/cobalt/lib/${_lib_name}.lz4",
-    ]
+    renaming_sources = [ "$root_build_dir/app/${_name}/lib/${_lib_name}.lz4" ]
+    renaming_destinations = [ "app/cobalt/lib/${_lib_name}.lz4" ]
 
-    deps = [
-      ":copy_${_name}_empty_fonts($default_toolchain)",
-      ":copy_${_name}_lib($default_toolchain)",
-    ]
+    deps = [ ":copy_${_name}_lib($default_toolchain)" ]
 
     if (_name == "cobalt") {
-      sources = [ "$root_build_dir/cobalt_shell.pak" ]
-      deps += [ "//cobalt/shell:pak($default_toolchain)" ]
+      # Bundle a real font package selected by cobalt_font_package instead of
+      # the empty placeholder
+      _font_files = exec_script(
+              "//starboard/content/fonts/scripts/filter_fonts.py",
+              [
+                    "-i",
+                    rebase_path(_font_config, root_build_dir),
+                    "-f",
+                    _font_files_dir,
+                  ] + _font_categories,
+              "trim list lines",
+              [ _font_config ])
+      renaming_sources += [ _fonts_xml ]
+      renaming_destinations += [ "app/cobalt/content/fonts/fonts.xml" ]
+      foreach(_font, _font_files) {
+        _font_file = get_path_info(_font, "file")
+        renaming_sources += [ "$_font_files_dir/$_font_file" ]
+        renaming_destinations += [ "app/cobalt/content/fonts/$_font_file" ]
+      }
+
+      # Package the resource pak under the content directory (like fonts), so
+      # cobalt can find it via base::DIR_ASSETS 
+      renaming_sources += [ "$root_build_dir/cobalt_shell.pak" ]
+      renaming_destinations += [ "app/cobalt/content/cobalt_shell.pak" ]
+
+      deps += [
+        ":$_fonts_xml_target",
+        "//cobalt/shell:pak($default_toolchain)",
+      ]
+    } else {
+      # nplb and other non-rendering modules keep the empty placeholder fonts.xml.
+      renaming_sources +=
+          [ "$root_build_dir/app/${_name}/content/fonts/fonts.xml" ]
+      renaming_destinations += [ "app/cobalt/content/fonts/fonts.xml" ]
+      deps += [ ":copy_${_name}_empty_fonts($default_toolchain)" ]
     }
 
     if (_name == "nplb") {
