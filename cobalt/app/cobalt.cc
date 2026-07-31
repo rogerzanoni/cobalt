@@ -54,6 +54,11 @@ void SbEventHandle(const SbEvent* event) {
     SbEventId probe =
         SbEventSchedule(&NoopScheduledEvent, nullptr, /*delay_usec=*/0);
     if (probe == kSbEventIdInvalid) {
+      // No Starboard event loop drives this callback, so initialize the browser
+      // here before pumping: HandleEvent() -> OnStart() -> RunProcess() both sets
+      // up this thread's task environment (which base::RunLoop requires) and posts
+      // the initial browser work for the loop below to run.
+      s_lifecycle_delegate->HandleEvent(event);
       base::RunLoop run_loop;
       run_loop.Run();
       return;
